@@ -22,10 +22,14 @@ start=1
 for ((i=start; i<=${total}; i++))
 do
     dir="student-env-${i}"
-    mkdir -p ${dir}
-    pushd ${dir}
-    find ../template -mindepth 1 -maxdepth 1 -exec ln -s {} \;
-    popd
+    mkdir -p ${dir}; pushd ${dir} > /dev/null
+    find ../template -mindepth 1 -maxdepth 1 -type f -exec ln -sf {} \;
+    for dir in ops terraform; do
+        mkdir -p ${dir}; pushd ${dir} > /dev/null
+        find ../../template/${dir} -mindepth 1 -maxdepth 1 -type f -exec ln -sf {} \;
+        popd > /dev/null
+    done
+    popd > /dev/null
 done
 
 if ! [ -x "$(command -v bbl)" ]; then
