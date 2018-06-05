@@ -1,0 +1,6 @@
+- type: replace
+  path: /cloud_provider/mbus
+  value: https://mbus:((mbus_bootstrap_password))@((external_ip)):9600
+- type: replace
+  path: /cloud_provider/properties/agent/mbus
+  value: https://mbus:((mbus_bootstrap_password))@((internal_ip)):9600
