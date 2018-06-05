@@ -10,7 +10,7 @@ export BBL_GCP_SERVICE_ACCOUNT_KEY=${BBL_ENV_NAME}_gcp_credentials.json
 
 if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
     gcloud iam service-accounts create ${BBL_ENV_NAME}-service-account \
-           --display-name "${BOSH_COURSE_NAME} service account" \
+           --display-name "${BBL_ENV_NAME} service account" \
            --project ${PROJECT_ID}
 
     gcloud iam service-accounts keys create ${BBL_GCP_SERVICE_ACCOUNT_KEY} \
