@@ -17,7 +17,7 @@ if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
            --iam-account ${BBL_ENV_NAME}-service-account@${PROJECT_ID}.iam.gserviceaccount.com
 
     gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-           --member serviceAccount:${BBL_ENV_NAME}-service-account@${BOSH_PROJECT_ID}.iam.gserviceaccount.com \
+           --member serviceAccount:${BBL_ENV_NAME}-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
            --role "roles/editor"
 fi
 
