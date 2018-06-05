@@ -23,7 +23,9 @@ for ((i=start; i<=${total}; i++))
 do
     dir="student-env-${i}"
     mkdir -p ${dir}
-    cp -r template/* "${dir}/"
+    pushd ${dir}
+    find ../template -mindepth 1 -maxdepth 1 -exec ln -s {} \;
+    popd
 done
 
 if ! [ -x "$(command -v bbl)" ]; then
