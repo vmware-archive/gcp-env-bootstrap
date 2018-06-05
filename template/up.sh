@@ -4,7 +4,7 @@ pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
 if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
-    gcloud iam service-accounts create ${SERVICE_ACCOUNT} \
+    gcloud iam service-accounts create ${BBL_ENV_NAME} \
            --display-name "${BBL_ENV_NAME} service account" \
            --project ${PROJECT_ID}
 
