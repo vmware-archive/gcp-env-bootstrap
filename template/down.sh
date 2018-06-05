@@ -5,5 +5,5 @@ source ./common.sh
 
 bbl down --no-confirm
 
-gcloud iam service-accounts delete ${SERVICE_ACCOUNT}
+gcloud --quiet iam service-accounts delete ${SERVICE_ACCOUNT}
 rm -f ${BBL_GCP_SERVICE_ACCOUNT_KEY}
