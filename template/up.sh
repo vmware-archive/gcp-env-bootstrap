@@ -18,7 +18,7 @@ fi
 
 bbl up
 
-cat > .env <<-OEOF
+cat > ${BBL_ENV_NAME}-env <<-OEOF
 #!/bin/bash
 export JUMPBOX_PRIVATE_KEY=\$(mktemp)
 cat > \${JUMPBOX_PRIVATE_KEY} <<-EOF
