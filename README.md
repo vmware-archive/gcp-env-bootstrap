@@ -36,3 +36,8 @@ for project in $(ls student-env-*); do
   tmux new-window bash -lic '~/bosh-course-bootstrap/${project}/down.sh && sleep 10'
 done
 ```
+
+Students will need the env file located in the envrionment directory:
+```
+find student-env-*/*-env -exec cloudshell download-file {} \;
+```
