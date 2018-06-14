@@ -2,7 +2,7 @@
 
 From google web cloud console run:
 ```
-git clone https://github.com/rkoster/bosh-course-bootstrap
+git clone https://github.com/platform-acceleration-lab/cf-bosh-course-env-bootstrap-scripts bosh-course-bootstrap
 cd bosh-course-bootstrap
 ```
 
