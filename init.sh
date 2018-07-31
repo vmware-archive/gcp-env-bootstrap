@@ -30,7 +30,7 @@ do
         popd > /dev/null
     done
     popd > /dev/null
-    echo "Created ${dir}"
+    echo "Created student-env-${i}"
 done
 
 if ! [ -x "$(command -v bbl)" ]; then
