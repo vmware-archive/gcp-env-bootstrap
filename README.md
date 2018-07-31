@@ -19,19 +19,20 @@ Created student-env-3
 Student environments created         
 ```
 
-If at a later point your cloud console vm was recreated run `./install_deps.sh`.
+The UP / DOWN script use tmux windows in GCloud Shell.
+Use tmux commands to switch between the windows and monitor progress.
 
-To bring the envrionments up run:
+To bring the envrionments "UP" run:
 ```
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
-  tmux new-window bash -lic '${project}/up.sh && sleep 10'
+  tmux new-window bash -lic "${project}/up.sh"
 done
 ```
 
-To bring the envrionments down run:
+To take the envrionments "DOWN" run:
 ```
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
-  tmux new-window bash -lic '${project}/down.sh && sleep 10'
+  tmux new-window bash -lic "${project}/down.sh"
 done
 ```
 
@@ -39,3 +40,6 @@ Students will need the env file located in the envrionment directory:
 ```
 find ~/bosh-course-bootstrap/student-env-*/*-env -exec cloudshell download-file {} \;
 ```
+
+If at a later point your cloud console vm was recreated run `./install_deps.sh`.
+
