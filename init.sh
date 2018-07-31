@@ -30,8 +30,10 @@ do
         popd > /dev/null
     done
     popd > /dev/null
+    echo "Created ${dir}"
 done
 
 if ! [ -x "$(command -v bbl)" ]; then
     ./install_deps.sh
 fi
+echo "Student environments created"
