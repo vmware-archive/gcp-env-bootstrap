@@ -23,14 +23,14 @@ If at a later point your cloud console vm was recreated run `./install_deps.sh`.
 
 To bring the envrionments up run:
 ```
-for project in $(ls ~/bosh-course-bootstrap/student-env-*); do
+for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
   tmux new-window bash -lic '${project}/up.sh && sleep 10'
 done
 ```
 
 To bring the envrionments down run:
 ```
-for project in $(ls ~/bosh-course-bootstrap/student-env-*); do
+for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
   tmux new-window bash -lic '${project}/down.sh && sleep 10'
 done
 ```
