@@ -22,6 +22,9 @@ Student environments created
 The UP / DOWN script use tmux windows in GCloud Shell.
 Use tmux commands to switch between the windows and monitor progress.
 
+Before ever running the `up` or `down` scripts you should ensure that `bbl` is installed.
+Use `./install_deps.sh` to fix.
+
 To bring the envrionments "UP" run:
 ```
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
@@ -40,6 +43,3 @@ Students will need the env file located in the envrionment directory:
 ```
 find ~/bosh-course-bootstrap/student-env-*/*-env -exec cloudshell download-file {} \;
 ```
-
-If at a later point your cloud console vm was recreated run `./install_deps.sh`.
-
