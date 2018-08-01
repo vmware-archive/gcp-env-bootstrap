@@ -22,18 +22,22 @@ Student environments created
 The UP / DOWN script use tmux windows in GCloud Shell.
 Use tmux commands to switch between the windows and monitor progress.
 
-Before ever running the `up` or `down` scripts you should ensure that `bbl` is installed.
-Use `./install_deps.sh` to fix.
+Before running the `up` or `down` scripts you should ensure that `bbl` is installed.
+```bash
+if ! [ -x "$(command -v bbl)" ]; then
+    ./install_deps.sh
+fi
+```
 
 To bring the envrionments "UP" run:
-```
+```bash
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
   tmux new-window bash -lic "${project}/up.sh"
 done
 ```
 
 To take the envrionments "DOWN" run:
-```
+```bash
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
   tmux new-window bash -lic "${project}/down.sh"
 done
