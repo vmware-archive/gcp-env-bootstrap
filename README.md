@@ -19,7 +19,14 @@ Created student-env-3
 Student environments created         
 ```
 
-The UP / DOWN script use tmux windows in GCloud Shell.
+Before running the UP / DOWN scripts you should ensure that `bbl` is installed.	
+```bash	
+if ! [ -x "$(command -v bbl)" ]; then	
+    ./install_deps.sh	
+fi	
+```
+
+The UP / DOWN scripts use tmux windows in GCloud Shell.
 Use tmux commands to switch between the windows and monitor progress.
 
 To bring the envrionments "UP" run:
