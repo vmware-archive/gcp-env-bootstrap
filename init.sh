@@ -18,6 +18,11 @@ while true; do
     esac
 done
 
+if ! [ -x "$(command -v bbl)" ]; then
+    echo "Installing dependencies"
+    ./install_deps.sh
+fi
+
 start=1
 for ((i=start; i<=${total}; i++))
 do
@@ -32,8 +37,4 @@ do
     popd > /dev/null
     echo "Created student-env-${i}"
 done
-
-if ! [ -x "$(command -v bbl)" ]; then
-    ./install_deps.sh
-fi
 echo "Student environments created"
