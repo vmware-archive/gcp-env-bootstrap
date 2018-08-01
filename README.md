@@ -32,14 +32,14 @@ Use tmux commands to switch between the windows and monitor progress.
 To bring the envrionments "UP" run:
 ```bash
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
-  tmux new-window bash -lic "${project}/up.sh 2>&1 | tee "${project}/up-log.txt"
+  tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt"
 done
 ```
 
 To take the envrionments "DOWN" run:
 ```bash
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
-  tmux new-window bash -lic "${project}/down.sh 2>&1 | tee "${project}/down-log.txt"
+  tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt"
 done
 ```
 
