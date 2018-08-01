@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if ! [ -x "$(command -v bbl)" ]; then
-    echo "Installing dependencies"
-    ./install_deps.sh
-fi
-
 pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
