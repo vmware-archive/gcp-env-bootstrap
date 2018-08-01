@@ -32,14 +32,14 @@ fi
 To bring the envrionments "UP" run:
 ```bash
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
-  tmux new-window bash -lic "${project}/up.sh"
+  tmux new-window bash -lic "${project}/up.sh | tee "${project}/up-log.txt"
 done
 ```
 
 To take the envrionments "DOWN" run:
 ```bash
 for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
-  tmux new-window bash -lic "${project}/down.sh"
+  tmux new-window bash -lic "${project}/down.sh | tee "${project}/down-log.txt"
 done
 ```
 
