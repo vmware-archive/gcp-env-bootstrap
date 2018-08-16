@@ -31,19 +31,19 @@ Use tmux commands to switch between the windows and monitor progress.
 
 To bring the envrionments "UP" run:
 ```bash
-for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
+for project in $(ls -d ~/bosh-course-bootstrap/envs/*); do
   tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt"
 done
 ```
 
 To take the envrionments "DOWN" run:
 ```bash
-for project in $(ls -d ~/bosh-course-bootstrap/student-env-*); do
+for project in $(ls -d ~/bosh-course-bootstrap/envs/*); do
   tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt"
 done
 ```
 
 Students will need the env file located in the envrionment directory:
 ```
-find ~/bosh-course-bootstrap/student-env-*/*-env -exec cloudshell download-file {} \;
+find ~/bosh-course-bootstrap/envs/*/*-env -exec cloudshell download-file {} \;
 ```
