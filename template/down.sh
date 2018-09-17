@@ -11,4 +11,6 @@ gcloud projects remove-iam-policy-binding ${PROJECT_ID} \
 
 gcloud --quiet iam service-accounts delete ${SERVICE_ACCOUNT}
 
+gcloud --quiet projects delete ${PROJECT_ID}
+
 rm -f ${BBL_GCP_SERVICE_ACCOUNT_KEY}

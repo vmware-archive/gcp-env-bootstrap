@@ -3,6 +3,18 @@
 pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
+if ! gcloud projects describe ${PROJECT_ID} >/dev/null 2>&1; then
+    if ! gcloud projects create ${PROJECT_ID}; then
+	echo "${PROJECT_ID} could not be created. Aborting environment creation."
+	exit 1
+    fi
+fi
+
+if gcloud projects describe ${PROJECT_ID} | grep -q DELETE_REQUESTED; then
+    echo "${PROJECT_ID} is pending deletion and cannot be re-used. Aborting environment creation."
+    exit 1
+fi
+
 if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
     gcloud iam service-accounts create ${BBL_ENV_NAME} \
            --display-name "${BBL_ENV_NAME} service account" \
