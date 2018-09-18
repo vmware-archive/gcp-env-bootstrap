@@ -4,29 +4,33 @@ pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
 if ! gcloud projects describe ${PROJECT_ID} >/dev/null 2>&1; then
-    if ! gcloud projects create ${PROJECT_ID}; then
-	echo "${PROJECT_ID} could not be created. Aborting environment creation."
-	exit 1
-    fi
+  if ! gcloud projects create ${PROJECT_ID}; then
+    echo "${PROJECT_ID} could not be created. Aborting environment creation."
+    exit 1
+  fi
 fi
 
 if gcloud projects describe ${PROJECT_ID} | grep -q DELETE_REQUESTED; then
-    echo "${PROJECT_ID} is pending deletion and cannot be re-used. Aborting environment creation."
-    exit 1
+  echo "${PROJECT_ID} is pending deletion and cannot be re-used. Aborting environment creation."
+  exit 1
 fi
 
 if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
-    gcloud iam service-accounts create ${BBL_ENV_NAME} \
-           --display-name "${BBL_ENV_NAME} service account" \
-           --project ${PROJECT_ID}
-
-    gcloud iam service-accounts keys create ${BBL_GCP_SERVICE_ACCOUNT_KEY} \
-           --iam-account ${SERVICE_ACCOUNT}
-
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-           --member serviceAccount:${SERVICE_ACCOUNT} \
-           --role "roles/editor"
+  gcloud iam service-accounts create ${BBL_ENV_NAME} \
+    --display-name "${BBL_ENV_NAME} service account" \
+    --project ${PROJECT_ID}
+  
+  gcloud iam service-accounts keys create ${BBL_GCP_SERVICE_ACCOUNT_KEY} \
+    --iam-account ${SERVICE_ACCOUNT}
+  
+  gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member serviceAccount:${SERVICE_ACCOUNT} \
+    --role "roles/editor"
 fi
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member user:$(cat ./student.txt) \
+  --role "roles/editor"
 
 bbl up
 
