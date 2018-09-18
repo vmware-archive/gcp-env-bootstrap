@@ -15,6 +15,7 @@ gcloud projects remove-iam-policy-binding ${PROJECT_ID} \
 
 gcloud --quiet iam service-accounts delete ${SERVICE_ACCOUNT}
 
-gcloud --quiet projects delete ${PROJECT_ID}
+# we could delete the project, but don't because it detaches the billing account and we may not have rights to bring it back.
+#gcloud --quiet projects delete ${PROJECT_ID}
 
 rm -f ${BBL_GCP_SERVICE_ACCOUNT_KEY}
