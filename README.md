@@ -25,7 +25,7 @@ Are you sure?
 
 Follow the prompt to create the `envs` directories.
 
-The UP / DOWN scripts use tmux windows.
+The up/down scripts use tmux windows.
 Use tmux commands to switch between the windows and monitor progress.
 
 To bring the envrionments "UP" run:
