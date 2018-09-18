@@ -1,32 +1,31 @@
 # bosh-course-bootstrap
 
-The following code _must_ be run from within a Google Cloud Shell session, where tmux is enabled by default.
-Your session should be pre-authenticated as an "Owner" of the target project.
+The following code _must_ be run from within a tmux session.
+Your session should be pre-authenticated as a user capable of creating GCP projects.
 
-From Google Cloud Shell run:
+Clone this repo:
 ```
 git clone https://github.com/platform-acceleration-lab/cf-bosh-course-env-bootstrap-scripts ~/bosh-course-bootstrap
 cd ~/bosh-course-bootstrap
 ```
 
-To create student environments run `./init.sh` which will show:
+The `./init.sh` requires a variable named `COHORT_ID` to be set and a list of student emails provided as script arguments.
+For example:
 ```
-How many student environments do you want to create: 3
-Do you wish to create: 3 student environments [yes/no]: yes
-Created student-env-1
-Created student-env-2
-Created student-env-3
-Student environments created         
+COHORT_ID=123456789 ./init.sh fbloggs@abc.com gbloggs@xyz.com
 ```
 
-Before running the UP / DOWN scripts you should ensure that `bbl` is installed.	
-```bash	
-if ! [ -x "$(command -v bbl)" ]; then	
-    ./install_deps.sh	
-fi	
+Which should produce the following output.
+```
+The following environments will be created:
+- bosh-123456789-fbloggs (fbloggs@abc.com)
+- bosh-123456789-gbloggs (gbloggs@xyz.com)
+Are you sure?
 ```
 
-The UP / DOWN scripts use tmux windows in GCloud Shell.
+Follow the prompt to create the `envs` directories.
+
+The up/down scripts use tmux windows.
 Use tmux commands to switch between the windows and monitor progress.
 
 To bring the envrionments "UP" run:
@@ -47,3 +46,5 @@ Students will need the env file located in the envrionment directory:
 ```
 find ~/bosh-course-bootstrap/envs/*/*-env -exec cloudshell download-file {} \;
 ```
+
+In order to force all environments to be created/destroyed inside a single project you should export/inject the `PROJECT_ID` variable into the up/down scripts.
