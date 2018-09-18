@@ -9,7 +9,7 @@ git clone https://github.com/platform-acceleration-lab/cf-bosh-course-env-bootst
 cd ~/bosh-course-bootstrap
 ```
 
-The `./init.sh` requires a variable named `COHORT_ID` to be set and a list of student emails are script arguments.
+The `./init.sh` requires a variable named `COHORT_ID` to be set and a list of student emails provided as script arguments.
 For example:
 ```
 COHORT_ID=123456789 ./init.sh fbloggs@abc.com gbloggs@xyz.com
