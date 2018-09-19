@@ -19,12 +19,12 @@ There are three main scripts to use, `init.sh`, `up.sh` and `down.sh`.
 It is used to generate directories that contain templates and scripts to deploy a director.
 
 Inputs:
-- environment id variable
+- group id variable (optional, randomized when omitted)
 - list of emails
 
 Usage:
 ```
-ENVIRONMENT_ID=123456789 ./init.sh fbloggs@abc.com gbloggs@xyz.com
+GROUP_ID=123456789 ./init.sh fbloggs@abc.com gbloggs@xyz.com
 ```
 
 Output:

@@ -1,12 +1,10 @@
 #!/bin/bash
 
-set -u # explode if any env vars are not set
-
 function email2projectid() {
-    echo "bosh-${ENVIRONMENT_ID}-$(echo $1 | cut -d'@' -f1 | tr '[:upper:]._' '[:lower:]--')"
+    echo "bosh-${GROUP_ID}-$(echo $1 | tr '[:upper:]@._' '[:lower:]---' | tr -d ' ' | cut -c1-30)"
 }
 
-ENVIRONMENT_ID=${ENVIRONMENT_ID} # required variable
+GROUP_ID=${GROUP_ID:-${RANDOM}}
 
 SCRIPTDIR=$(cd $(dirname "$0") && pwd -P)
 
