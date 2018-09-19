@@ -35,7 +35,11 @@ To take an environment down cd into the directory of the environment you want to
 ./down.sh
 ```
 
-Students will need the env file located in each environment directory, in our example they would be the following.
+The env files located in each environment directory contain all variables needed to connect to the BOSH director that
+was spun up with the up script.
+Source an env file to interact with the respective director using the BOSH CLI.
+Our example would produce the following files.
+
 ```
 envs/bosh-123456789-gbloggs/bosh-123456789-gbloggs-env
 envs/bosh-123456789-fbloggs/bosh-123456789-fbloggs-env
