@@ -51,9 +51,9 @@ This will create a separate GCP project. In order to achieve this they need to b
 to create projects in a GCP organization.
 
 
-To use an existing GCP project run.
+To use (or create) a GCP project of your own choice run the following.
 ```
-PROJECT_ID=blue-star ./up.sh
+PROJECT_ID=blue-star-13579 ./[env-to-spin-up]/up.sh
 ```
 
 Output:
