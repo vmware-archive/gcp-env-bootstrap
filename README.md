@@ -44,7 +44,7 @@ Usage:
 
 From the `envs` directory run the following.
 ```bash
-./[env-to-spin-up]/up.sh
+./envs/[env-to-spin-up]/up.sh
 ```
 
 This will create a separate GCP project. In order to achieve this they need to be run by a user with sufficient rights
@@ -53,7 +53,7 @@ to create projects in a GCP organization.
 
 To use (or create) a GCP project of your own choice run the following.
 ```
-PROJECT_ID=blue-star-13579 ./[env-to-spin-up]/up.sh
+PROJECT_ID=blue-star-13579 ./envs/[env-to-spin-up]/up.sh
 ```
 
 Output:
@@ -91,7 +91,7 @@ trouble shoot later on if things go wrong.
 To bring multiple environments _up_.
 
 ```
-for project in $(ls -d bosh-env-bootstrap/envs/*); do
+for project in $(ls -d ./envs/*); do
   tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt"
 done
 ```
@@ -99,7 +99,7 @@ done
 To take the environments _down_.
 
 ```
-for project in $(ls -d bosh-env-bootstrap/envs/*); do
+for project in $(ls -d ./envs/*); do
   tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt"
 done
 ```
