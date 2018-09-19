@@ -88,6 +88,8 @@ Use [tmux](https://en.wikipedia.org/wiki/Tmux) to bring up multiple environments
 It is also helpful to store logs using [tee](https://en.wikipedia.org/wiki/Tee_(command)) in the process so that you can
 trouble shoot later on if things go wrong.
 
+To force multiple environments to be inside in a single project, you should first `export` the `PROJECT_ID` variable.
+
 To bring multiple environments _up_.
 
 ```
