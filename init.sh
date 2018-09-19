@@ -3,10 +3,10 @@
 set -u # explode if any env vars are not set
 
 function email2projectid() {
-    echo "bosh-${COHORT_ID}-$(echo $1 | cut -d'@' -f1 | tr '[:upper:]._' '[:lower:]--')"
+    echo "bosh-${ENVIRONMENT_ID}-$(echo $1 | cut -d'@' -f1 | tr '[:upper:]._' '[:lower:]--')"
 }
 
-COHORT_ID=${COHORT_ID} # required variable
+ENVIRONMENT_ID=${ENVIRONMENT_ID} # required variable
 
 SCRIPTDIR=$(cd $(dirname "$0") && pwd -P)
 
@@ -16,9 +16,9 @@ if [ $# -eq 0 ]; then
 fi
 
 echo "The following environments will be created:"
-for student in "$@"
+for user in "$@"
 do
-	echo "- $(email2projectid $student) (${student})"
+	echo "- $(email2projectid $user) (${user})"
 done
 read -p "Are you sure? " -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -31,12 +31,12 @@ if ! [ -x "$(command -v bbl)" ]; then
   ${SCRIPTDIR}/install_deps.sh
 fi
 
-for student in "$@"
+for user in "$@"
 do
-  projectid=$(email2projectid ${student})
+  projectid=$(email2projectid ${user})
   dir="${SCRIPTDIR}/envs/${projectid}"
   mkdir -p ${dir}; pushd ${dir} > /dev/null
-  echo "${student}" > student.txt
+  echo "${user}" > user.txt
   find ${SCRIPTDIR}/template -mindepth 1 -maxdepth 1 -type f -exec ln -sf {} \;
   for dir2 in ops terraform; do
     mkdir -p ${dir2}; pushd ${dir2} > /dev/null
@@ -47,4 +47,4 @@ do
   echo "Created ${projectid}"
 done
 
-echo "Student environments created"
+echo "User environments created"

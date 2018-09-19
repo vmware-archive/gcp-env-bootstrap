@@ -6,7 +6,7 @@ source ./common.sh
 bbl down --no-confirm
 
 gcloud projects remove-iam-policy-binding ${PROJECT_ID} \
-  --member user:$(cat ./student.txt) \
+  --member user:$(cat ./user.txt) \
   --role "roles/editor"
 
 gcloud projects remove-iam-policy-binding ${PROJECT_ID} \

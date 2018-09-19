@@ -29,7 +29,7 @@ if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
 fi
 
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member user:$(cat ./student.txt) \
+  --member user:$(cat ./user.txt) \
   --role "roles/editor"
 
 bbl up

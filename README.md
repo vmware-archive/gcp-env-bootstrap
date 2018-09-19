@@ -1,49 +1,106 @@
-# bosh-course-bootstrap
+# BOSH environment bootstrap scripts
 
-Your session needs to be pre-authenticated as a user capable of creating GCP projects.
+## Overview
 
-Clone this repo.
+Clone this repo onto a linux system.
 
-The `./init.sh` requires a variable named `COHORT_ID` to be set and a list of student emails provided as script
-arguments.
+The scripts contained in this repo are designed to deploy BOSH directors to GCP and to allow users to easily interact
+with the generated directors.
 
-For example:
+There are two general options.
+-   One director per GCP project.
+-   All directors in one GCP project.
+
+There are three main scripts to use, `init.sh`, `up.sh` and `down.sh`.
+
+
+## The `init.sh` script
+
+It is used to generate directories that contain templates and scripts to deploy a director.
+
+Inputs:
+- environment id variable
+- list of emails
+
+Usage:
 ```
-COHORT_ID=123456789 ./init.sh fbloggs@abc.com gbloggs@xyz.com
+ENVIRONMENT_ID=123456789 ./init.sh fbloggs@abc.com gbloggs@xyz.com
 ```
 
-Which will produce the following output.
-```
-The following environments will be created:
-- bosh-123456789-fbloggs (fbloggs@abc.com)
-- bosh-123456789-gbloggs (gbloggs@xyz.com)
-Are you sure?
-```
+Output:
 
-Follow the prompt to create the `envs` directory, which will hold a directory with each of the environments you
-requested.
+-   A directory called `envs` that contains the directories for the environments requested. 
+    In this case: `bosh-123456789-fbloggs` and `bosh-123456789-gbloggs`.
 
 
+## The `up.sh` script
 
-To bring an  environment up cd into the directory of the environment you want to spin up  and run:
+It is used to deploy a director. 
+
+Inputs:
+- project id variable (optional)
+
+Usage:
+
+From the `envs` directory run the following.
 ```bash
-./up.sh
+./[env-to-spin-up]/up.sh
 ```
 
-To take an environment down cd into the directory of the environment you want to take down and run:
-```bash
-./down.sh
+This will create a separate GCP project. In order to achieve this they need to be run by a user with sufficient rights
+to create projects in a GCP organization.
+
+
+To use an existing GCP project run.
+```
+PROJECT_ID=blue-star ./up.sh
 ```
 
-The env files located in each environment directory contain all variables needed to connect to the BOSH director that
-was spun up with the up script.
+Output:
+
+- A _*-env_ file. This file contains all variables needed to connect to the BOSH director that was spun up.
+
+
+
 Source an env file to interact with the respective director using the BOSH CLI.
-Our example would produce the following files.
+
+## The `down.sh` script
+
+This will remove the director and jumpbox, clean up the VMs, disks and networks and remove all users the up script had
+created.
+
+
+Usage:
+
+From the `envs` directory run the following.
+```bash
+./[env-to-take-down]/down.sh
+```
+
+Output:
+
+- A clean GCP project with all traces of the director removed.
+
+
+## Multiple environments
+
+Use [tmux](https://en.wikipedia.org/wiki/Tmux) to bring up multiple environments at once.
+It is also helpful to store logs using [tee](https://en.wikipedia.org/wiki/Tee_(command)) in the process so that you can
+trouble shoot later on if things go wrong.
+
+To bring multiple environments _up_.
 
 ```
-envs/bosh-123456789-gbloggs/bosh-123456789-gbloggs-env
-envs/bosh-123456789-fbloggs/bosh-123456789-fbloggs-env
+for project in $(ls -d bosh-env-bootstrap/envs/*); do
+  tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt"
+done
 ```
 
-In order to force all environments to be created/destroyed inside a single project you can export/inject the
-`PROJECT_ID` variable into the up/down scripts.
+To take the environments _down_.
+
+```
+for project in $(ls -d bosh-env-bootstrap/envs/*); do
+  tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt"
+done
+```
+
