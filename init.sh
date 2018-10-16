@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function email2projectid() {
-    echo "bosh-${GROUP_ID}-$(echo $1 | tr '[:upper:]@._' '[:lower:]---' | tr -d ' ' | cut -c1-30)"
+    echo "bosh-${GROUP_ID}-$(echo $1 | tr '[:upper:]@._' '[:lower:]---' | tr -d ' ')" | cut -c -30
 }
 
 GROUP_ID=${GROUP_ID:-${RANDOM}}
