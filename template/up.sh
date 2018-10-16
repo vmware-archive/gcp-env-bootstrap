@@ -15,6 +15,10 @@ if gcloud projects describe ${PROJECT_ID} | grep -q DELETE_REQUESTED; then
   exit 1
 fi
 
+gcloud services enable compute.googleapis.com --project ${PROJECT_ID}
+gcloud services enable ian.googleapis.com --project ${PROJECT_ID}
+gcloud services enable cloudresourcemanager.googleapis.com --project ${PROJECT_ID}
+
 if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
   gcloud iam service-accounts create ${BBL_ENV_NAME} \
     --display-name "${BBL_ENV_NAME} service account" \
