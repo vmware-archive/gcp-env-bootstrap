@@ -3,15 +3,11 @@
 pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
-gcloud components update
-gcloud components install beta
-
-gcloud services enable compute.googleapis.com --project ${PROJECT_ID}
-gcloud services enable ian.googleapis.com --project ${PROJECT_ID}
-gcloud services enable cloudresourcemanager.googleapis.com --project ${PROJECT_ID}
-
 if ! gcloud projects describe ${PROJECT_ID} >/dev/null 2>&1; then
   if gcloud projects create ${PROJECT_ID}; then
+    gcloud services enable compute.googleapis.com --project ${PROJECT_ID}
+    gcloud services enable ian.googleapis.com --project ${PROJECT_ID}
+    gcloud services enable cloudresourcemanager.googleapis.com --project ${PROJECT_ID}
     gcloud beta billing accounts projects link ${PROJECT_ID} --account-id=${BILLING_ID}
   else
     echo "${PROJECT_ID} could not be created. Aborting environment creation."
