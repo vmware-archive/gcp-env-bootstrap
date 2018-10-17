@@ -15,7 +15,8 @@ more BOSH director VMs inside Google Cloud Platform.
 [GCP Cloud Shell](https://cloud.google.com/shell/docs/quickstart) is a
 simple option but hosting a small dedicated Ubuntu VM on an existing GCP
 project with the [GCloud SDK](https://cloud.google.com/sdk/install)
-installed and authenticated would represent a more robust configuration.
+installed and authenticated (as project owner) would represent a more robust
+configuration.
 
 There are two options available.
 
