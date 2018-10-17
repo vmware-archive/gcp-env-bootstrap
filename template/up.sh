@@ -4,7 +4,7 @@ pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
 gcloud components update
-gcloud components install alpha
+gcloud components install beta
 
 gcloud services enable compute.googleapis.com --project ${PROJECT_ID}
 gcloud services enable ian.googleapis.com --project ${PROJECT_ID}
