@@ -26,6 +26,9 @@ There are two options available.
 
 The primary script to use is `init.sh`.
 
+Be aware, attempts to create environments for student emails which _do not_
+represent genuine GCP acccounts will __fail__.
+
 ## The `init.sh` script
 
 The `init.sh` is used to generate directories that contain templates and
