@@ -7,7 +7,7 @@ if ! gcloud projects describe ${PROJECT_ID} >/dev/null 2>&1; then
   if gcloud projects create ${PROJECT_ID}; then
     gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ID}
     gcloud services enable compute.googleapis.com --project ${PROJECT_ID}
-    gcloud services enable ian.googleapis.com --project ${PROJECT_ID}
+    gcloud services enable iam.googleapis.com --project ${PROJECT_ID}
     gcloud services enable cloudresourcemanager.googleapis.com --project ${PROJECT_ID}
   else
     echo "${PROJECT_ID} could not be created. Aborting environment creation."
