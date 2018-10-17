@@ -102,6 +102,9 @@ Output:
 
 ## Multiple environments
 
+__Please be aware, due to potential for update conflicts, this approach
+is only current recommended for the multi-project configuration.__
+
 Use [tmux](https://en.wikipedia.org/wiki/Tmux) to bring up multiple
 environments at once.
 It is also helpful to persist logs using the tee command.
