@@ -5,7 +5,7 @@ source ./common.sh
 
 if ! gcloud projects describe ${PROJECT_ID} >/dev/null 2>&1; then
   if gcloud projects create ${PROJECT_ID}; then
-    gcloud beta billing projects link ${PROJECT_ID} --account-id=${BILLING_ID}
+    gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ID}
     gcloud services enable compute.googleapis.com --project ${PROJECT_ID}
     gcloud services enable ian.googleapis.com --project ${PROJECT_ID}
     gcloud services enable cloudresourcemanager.googleapis.com --project ${PROJECT_ID}
