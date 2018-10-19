@@ -26,8 +26,9 @@ There are two options available.
 
 The primary script to use is `init.sh`.
 
-Be aware, attempts to create environments for student emails which _do not_
-represent genuine GCP acccounts will __fail__.
+Before using `init.sh` you _must_ first ensure that each of the student
+emails map directly to a genuine GCP account.
+Failure to do this will cause the scripts to fail.
 
 ## The `init.sh` script
 
