@@ -88,6 +88,22 @@ Output:
 Source an env file to interact with the respective director using the
 BOSH CLI.
 
+## Testing a generated environment
+
+To test an environment we need to do the following
+
+- [Install](https://bosh.io/docs/cli-v2-install/) the BOSH cli.
+- Source the environment variables of the target environemnt.
+- Invoke a BOSH cli method which depends upon the BOSH director.
+
+For eaxmple, the following should produce a meaningful response from the
+director.
+
+```bash
+source ./envs/[env-to-spin-up]/[env-to-spin-up]-env
+bosh env
+```
+
 ## The generated `down.sh` script
 
 This will remove the director and jumpbox, clean up the VMs, disks and
@@ -131,20 +147,4 @@ To take the environments _down_.
 for project in $(ls -d ./envs/*); do
   tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt"
 done
-```
-
-## Testing an environment
-
-To test an environment we need to do the following
-
-- [Install](https://bosh.io/docs/cli-v2-install/) the BOSH cli.
-- Source the environment variables of the target environemnt.
-- Invoke a BOSH cli method which depends upon the BOSH director.
-
-For eaxmple, the following should produce a meaningful response from the
-director.
-
-```bash
-source ./envs/[env-to-spin-up]/[env-to-spin-up]-env
-bosh env
 ```
