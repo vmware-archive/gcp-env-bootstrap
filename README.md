@@ -88,7 +88,7 @@ Output:
 Source an env file to interact with the respective director using the
 BOSH CLI.
 
-## Testing a generated environment
+## Testing a deployed director
 
 To test an environment we need to do the following
 
