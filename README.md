@@ -39,7 +39,7 @@ VMs.
 Inputs:
 
 - a group id variable (optional, randomized when omitted)
-- a list of emails
+- a list of emails which correspond to genuine GCP accounts
 
 Usage:
 
