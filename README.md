@@ -93,7 +93,7 @@ BOSH CLI.
 To test an environment we need to do the following
 
 - [Install](https://bosh.io/docs/cli-v2-install/) the BOSH cli.
-- Source the environment variables of the target environemnt.
+- Source the environment variables of the target environment.
 - Invoke a BOSH cli method which depends upon the BOSH director.
 
 For eaxmple, the following should produce a meaningful response from the
@@ -128,7 +128,7 @@ environments at once.
 It is also helpful to persist logs using the tee command.
 in the process so that you can troubleshoot later on if things go wrong.
 
-To force multiple environments to be appear inside a single project, you
+To force multiple environments to appear inside a single project, you
 must first `export` the `PROJECT_ID` variable.
 It is a similar story for the `BILLING_ID` if new projects are to be
 created.
