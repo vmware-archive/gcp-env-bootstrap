@@ -37,11 +37,13 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member user:$(cat ./user.txt) \
   --role "roles/editor"
 
+bbl plan --lb-type concourse
 bbl up
 
 cat > ${BBL_ENV_NAME}-env <<-OEOF
 #!/bin/bash
 export JUMPBOX_PRIVATE_KEY=\$(mktemp)
+export CONCOURSE_LB_IP=$(bbl lbs | tr -d 'Concourse LB:,')
 cat > \${JUMPBOX_PRIVATE_KEY} <<-EOF
 $(bosh int vars/jumpbox-vars-store.yml --path /jumpbox_ssh/private_key)
 EOF
