@@ -64,7 +64,7 @@ Inputs:
 
 Usage:
 
-From the `envs` directory, to create a director in its own dedicated
+From the top-level directory, to create a director in its own dedicated
 project, run the following.
 The billing account id is required for the generation of new projects.
 
