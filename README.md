@@ -1,17 +1,11 @@
 # Purpose
 
-These are the environment bootstrap scripts for the
-[BOSH Essentials Course](https://pivotal.io/training/courses/bosh-essentials-training).
-
-Students are typically provided with a pre-provisioned BOSH director to
-use during the course.
-These scripts are used to help students revisit course material outside
-the classroom by generating the scripts necessary to stand up one or
-more BOSH director VMs inside Google Cloud Platform.
+These are the environment bootstrap scripts for spinning up GCP projects
+with a jumpbox and BOSH director installed.
 
 ## Usage
 
-`git clone` this repo onto a Linux system.
+Clone this repo onto a Linux system.
 [GCP Cloud Shell](https://cloud.google.com/shell/docs/quickstart) is a
 simple option but hosting a small dedicated Ubuntu VM on an existing GCP
 project with the [GCloud SDK](https://cloud.google.com/sdk/install)
@@ -21,13 +15,12 @@ configuration.
 There are two options available.
 
 -   Create _each_ director in a dedicated GCP project.
-    (preferred)
 -   Create _all_ directors in one GCP project.
 
 The primary script to use is `init.sh`.
 
-Before using `init.sh` you _must_ first ensure that each of the student
-emails map directly to a genuine GCP account.
+Before using `init.sh` you _must_ ensure that each of the student emails
+map directly to a genuine GCP account.
 Failure to do this will cause the scripts to fail.
 
 ## The `init.sh` script
@@ -55,7 +48,7 @@ Output:
 
 ## The generated `up.sh` script
 
-It is used to deploy a director.
+It is used to deploy a jumpbox and a director.
 
 Inputs:
 
@@ -96,7 +89,7 @@ To test an environment we need to do the following
 - Source the environment variables of the target environment.
 - Invoke a BOSH cli method which depends upon the BOSH director.
 
-For eaxmple, the following should produce a meaningful response from the
+For eaxmple, the following will produce a meaningful response from the
 director.
 
 ```bash
