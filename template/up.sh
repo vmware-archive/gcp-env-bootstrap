@@ -36,6 +36,10 @@ if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
     --member user:$(cat ../admins.txt) \
     --role "roles/owner"
 
+  gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member user:$(cat ../instructors.txt) \
+    --role "roles/owner"
+
 fi
 
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
