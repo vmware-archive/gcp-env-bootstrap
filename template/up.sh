@@ -35,13 +35,13 @@ if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
   for user in $(cat ../../../admins.txt); do
     gcloud projects add-iam-policy-binding ${PROJECT_ID} \
       --member user:"$user" \
-      --role "roles/owner"
+      --role "roles/editor"
   done
 
   for user in $(cat ../../../instructors.txt); do
     gcloud projects add-iam-policy-binding ${PROJECT_ID} \
       --member user:"$user" \
-      --role "roles/owner"
+      --role "roles/editor"
   done
 
 fi
