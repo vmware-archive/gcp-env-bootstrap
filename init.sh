@@ -18,7 +18,7 @@ for user in "$@"
 do
 	echo "- $(email2projectid $user) (${user})"
 done
-read -p "Are you sure? " -r
+read -p "Are you sure (y/n) ? " -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
   exit 2

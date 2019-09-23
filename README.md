@@ -31,14 +31,25 @@ VMs.
 
 Inputs:
 
-- a group id variable (optional, randomized when omitted)
-- a list of emails which correspond to genuine GCP accounts
+Command line:
+- A `GROUP_ID` variable (optional, randomized when omitted). 
+  This is an identifier for the set of GCP projects being created
+- A list of emails which correspond to genuine GCP accounts
 
 Usage:
 
 ```bash
-GROUP_ID=123456789 ./init.sh fbloggs@abc.com gbloggs@xyz.com
+export GROUP_ID=123456789
+./init.sh fbloggs@abc.com gbloggs@xyz.com
 ```
+
+Inputs via file:
+* `admins.txt` More or less static list of CloudOps admin accounts.
+   To be edited as team members roll on and off.
+   List of accounts to be given owner permissions on generated GCP project
+* `instructors.txt` Instructors for the cohort being provisioned.
+   To be edited for each cohort.
+   List of accounts to be given owner permissions on generated GCP project
 
 Output:
 
@@ -65,7 +76,15 @@ The billing account id is required for the generation of new projects.
 BILLING_ID=D8876C-B95EA9-0126BB ./envs/[env-to-spin-up]/up.sh
 ```
 
-Alternatively, if you want to force the director into an existing/shared
+After the `up.sh` script finishes, check the output for any uncaught errors.
+
+The following manual steps must be taken to complete the provisioning:
+Log into the GCP Console, locate the provisioned account, go to the `IAM and admin` page
+(navigate using the upper-left hamburger),
+and change the role of all the admins, instructors, and the student to `Owner`.
+
+
+**Alternatively**, if you want to force the director into an existing/shared
 project with a linked billing account, run the following.
 
 ```bash
@@ -89,7 +108,7 @@ To test an environment we need to do the following
 - Source the environment variables of the target environment.
 - Invoke a BOSH cli method which depends upon the BOSH director.
 
-For eaxmple, the following will produce a meaningful response from the
+For example, the following will produce a meaningful response from the
 director.
 
 ```bash
@@ -129,7 +148,7 @@ created.
 Then you can use the following.
 
 ```bash
-for project in $(ls -d ./envs/*); do
+for project in $(ls -d ./envs/${GROUP_ID}*); do
   tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt"
 done
 ```
@@ -137,7 +156,7 @@ done
 To take the environments _down_.
 
 ```bash
-for project in $(ls -d ./envs/*); do
+for project in $(ls -d ./envs/${GROUP_ID}*); do
   tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt"
 done
 ```
