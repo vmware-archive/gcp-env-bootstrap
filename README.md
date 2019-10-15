@@ -149,7 +149,7 @@ Then you can use the following.
 
 ```bash
 for project in $(ls -d ./envs/${GROUP_ID}*); do
-  tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt"
+  tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt";
 done
 ```
 
@@ -157,6 +157,6 @@ To take the environments _down_.
 
 ```bash
 for project in $(ls -d ./envs/${GROUP_ID}*); do
-  tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt"
+  tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt";
 done
 ```
