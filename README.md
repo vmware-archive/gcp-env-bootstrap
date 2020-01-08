@@ -32,8 +32,8 @@ VMs.
 Inputs:
 
 Command line:
-- A `GROUP_ID` variable (optional, randomized when omitted). 
-  This is an identifier for the set of GCP projects being created
+- A `GROUP_ID` variable (optional, randomized when omitted) 
+  This is an identifier for the set of GCP projects being created.
 - A list of emails which correspond to genuine GCP accounts
 
 Usage:
@@ -57,23 +57,31 @@ Output:
     environments requested.
     In this case `bosh-123456789-fbloggs` and `bosh-123456789-gbloggs`.
 
+## Create a folder for the class
+
+In the GCP resource manager, within the `pivotal.io` organization,
+within the `CSO-Education` folder, find the folder for the course you
+are creating environments for.
+Within this folder, make a new folder for the class using the cohort id
+as the name.
+Take note of the folder id that is associated with this newly created
+folder, as it will be needed in the following step.
+
 ## The generated `up.sh` script
 
 It is used to deploy a jumpbox and a director.
 
 Inputs:
 
-- project id variable (optional)
-- billing account id variable (optional)
+- folder id variable
 
 Usage:
 
 From the top-level directory, to create a director in its own dedicated
 project, run the following.
-The billing account id is required for the generation of new projects.
 
 ```bash
-BILLING_ID=D8876C-B95EA9-0126BB ./envs/[env-to-spin-up]/up.sh
+FOLDER_ID=123456789 ./envs/[env-to-spin-up]/up.sh
 ```
 
 After the `up.sh` script finishes, check the output for any uncaught errors.
@@ -82,14 +90,6 @@ The following manual steps must be taken to complete the provisioning:
 Log into the GCP Console, locate the provisioned account, go to the `IAM and admin` page
 (navigate using the upper-left hamburger),
 and change the role of all the admins, instructors, and the student to `Owner`.
-
-
-**Alternatively**, if you want to force the director into an existing/shared
-project with a linked billing account, run the following.
-
-```bash
-PROJECT_ID=blue-star-13579 ./envs/[env-to-spin-up]/up.sh
-```
 
 Output:
 
@@ -160,3 +160,11 @@ for project in $(ls -d ./envs/${GROUP_ID}*); do
   tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt";
 done
 ```
+
+## Email Michael Nemish with environment info
+
+After the projects have been provisioned, send an email to
+mnemish@pivotal.io with a list of GCP project that have been created.
+
+After spinning down the projects, also be sure to send him an email to
+let him know.

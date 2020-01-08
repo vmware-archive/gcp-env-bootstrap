@@ -1,54 +1,56 @@
 #!/bin/bash
 
+ORGANIZATION_ID=265595624405
+CLOUDHEALTH_SERVICE_ACCOUNT_NAME=cloudhealthpivotal
+BILLING_ID=0076DC-766E1F-EBDCB8
+
 pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
-if ! gcloud projects describe ${PROJECT_ID} >/dev/null 2>&1; then
-  if gcloud projects create ${PROJECT_ID}; then
+if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
     gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ID}
-    gcloud services enable compute.googleapis.com --project ${PROJECT_ID}
-    gcloud services enable iam.googleapis.com --project ${PROJECT_ID}
-    gcloud services enable cloudresourcemanager.googleapis.com --project ${PROJECT_ID}
-  else
+    gcloud services enable \
+        compute.googleapis.com \
+        iam.googleapis.com \
+        cloudresourcemanager.googleapis.com \
+        cloudbilling.googleapis.com \
+        storage-component.googleapis.com \
+        --project ${PROJECT_ID}
+else
     echo "${PROJECT_ID} could not be created. Aborting environment creation."
     exit 1
-  fi
 fi
 
-if gcloud projects describe ${PROJECT_ID} | grep -q DELETE_REQUESTED; then
-  echo "${PROJECT_ID} is pending deletion and cannot be re-used. Aborting environment creation."
-  exit 1
-fi
+gcloud iam service-accounts create ${BBL_ENV_NAME} \
+  --display-name "${BBL_ENV_NAME} service account" \
+  --project ${PROJECT_ID}
 
-if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
-  gcloud iam service-accounts create ${BBL_ENV_NAME} \
-    --display-name "${BBL_ENV_NAME} service account" \
-    --project ${PROJECT_ID}
-  
-  gcloud iam service-accounts keys create ${BBL_GCP_SERVICE_ACCOUNT_KEY} \
-    --iam-account ${SERVICE_ACCOUNT}
-  
-  gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-    --member serviceAccount:${SERVICE_ACCOUNT} \
-    --role "roles/owner"
+gcloud iam service-accounts keys create ${BBL_GCP_SERVICE_ACCOUNT_KEY} \
+  --iam-account ${SERVICE_ACCOUNT}
 
-  for user in $(cat ../../../admins.txt); do
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-      --member user:"$user" \
-      --role "roles/editor"
-  done
-
-  for user in $(cat ../../../instructors.txt); do
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-      --member user:"$user" \
-      --role "roles/editor"
-  done
-
-fi
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member serviceAccount:${SERVICE_ACCOUNT} \
+  --role "roles/owner"
 
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member user:$(cat ./user.txt) \
   --role "roles/editor"
+
+gcloud iam service-accounts create ${CLOUDHEALTH_SERVICE_ACCOUNT_NAME} \
+  --display-name=CloudHealthPivotal \
+  --project ${PROJECT_ID}
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member=serviceAccount:${CLOUDHEALTH_SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
+  --role=organizations/${ORGANIZATION_ID}/roles/cloudhealthrole \
+  --project ${PROJECT_ID} \
+  --no-user-output-enabled
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member=serviceAccount:${CLOUDHEALTH_SERVICE_ACCOUNT_NAME}@cma-test.iam.gserviceaccount.com \
+  --role=roles/viewer \
+  --project ${PROJECT_ID} \
+  --no-user-output-enabled
 
 bbl plan --lb-type concourse
 bbl up
