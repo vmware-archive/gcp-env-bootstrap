@@ -34,28 +34,22 @@ Inputs:
 Command line:
 - A `GROUP_ID` variable (optional, randomized when omitted) 
   This is an identifier for the set of GCP projects being created.
+  Use the naming convention `pksfun-mmdd` or `pasfun-mmdd` for the PKS
+  Fundamentals and PAS Fundamentals courses respectively.
 - A list of emails which correspond to genuine GCP accounts
 
 Usage:
 
 ```bash
-export GROUP_ID=123456789
+export GROUP_ID=pksfun-0503
 ./init.sh fbloggs@abc.com gbloggs@xyz.com
 ```
-
-Inputs via file:
-* `admins.txt` More or less static list of CloudOps admin accounts.
-   To be edited as team members roll on and off.
-   List of accounts to be given owner permissions on generated GCP project
-* `instructors.txt` Instructors for the cohort being provisioned.
-   To be edited for each cohort.
-   List of accounts to be given owner permissions on generated GCP project
 
 Output:
 
 -   A directory called `envs` that contains the directories for the
     environments requested.
-    In this case `bosh-123456789-fbloggs` and `bosh-123456789-gbloggs`.
+    In this case `pksfun-0503-fbloggs` and `pksfun-0503-gbloggs`.
 
 ## Create a folder for the class
 
@@ -96,6 +90,8 @@ Output:
 -   A _*-env_ file.
     This file contains all variables needed to connect to the BOSH
     director that was spun up.
+    This file will be saved in GCS within a folder named after the
+    GROUP_ID for instructors to access.
 
 Source an env file to interact with the respective director using the
 BOSH CLI.

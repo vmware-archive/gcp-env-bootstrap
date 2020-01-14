@@ -75,3 +75,5 @@ chmod 600 \${DIRECTOR_PRIVATE_KEY}
 export DIRECTOR_SSH=jumpbox@$(bosh int vars/director-vars-file.yml --path /internal_ip)
 $(bbl print-env | sed -e 's@=/.*@=${JUMPBOX_PRIVATE_KEY}@g')
 OEOF
+
+gsutil cp envs/${GROUP_ID}*/*-env gs://pal-env-files/${GROUP_ID}/
