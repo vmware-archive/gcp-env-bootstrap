@@ -31,6 +31,7 @@ else
   exit 1
 fi
 
+# is it going to be a problem to do this concurrently?
 gcloud container clusters get-credentials development-cluster --zone us-central1-c --project ${PROJECT_ID}
 
 # need to install kubectl if not installed
