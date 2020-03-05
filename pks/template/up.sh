@@ -31,23 +31,6 @@ else
   exit 1
 fi
 
-# is it going to be a problem to do this concurrently?
-gcloud container clusters get-credentials development-cluster --zone us-central1-c --project ${PROJECT_ID}
-
-# need to install kubectl if not installed
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
-
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
-
-kubectl run hello-app --image=gcr.io/google-samples/hello-app:1.0 --port=8080
-
-kubectl create namespace development
-
-kubectl expose deployment hello-app
-
-kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
-
-
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member user:$(cat ./user.txt) \
   --role "roles/editor"
@@ -67,3 +50,37 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --role=roles/viewer \
   --project ${PROJECT_ID} \
   --no-user-output-enabled
+
+# is it going to be a problem to do this concurrently?
+gcloud container clusters get-credentials development-cluster --zone us-central1-c --project ${PROJECT_ID}
+
+# need to install kubectl if not installed
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
+
+kubectl run hello-app --image=gcr.io/google-samples/hello-app:1.0 --port=8080
+
+kubectl create namespace development
+
+kubectl expose deployment hello-app
+
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
+
+curl http://$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')/
+
+result=$?
+
+if [[ $result != 0 ]]
+then
+  echo "${PROJECT_ID} could not be created. Sample app failed to deploy."
+  exit 1
+fi
+
+kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
+
+kubectl delete svc hello-app
+
+kubectl delete deployment hello-app
+
+echo "${PROJECT_ID} successfully provisioned."
