@@ -36,11 +36,6 @@ do
   mkdir -p ${dir}; pushd ${dir} > /dev/null
   echo "${user}" > user.txt
   find ${SCRIPTDIR}/template -mindepth 1 -maxdepth 1 -type f -exec ln -sf {} \;
-  for dir2 in ops terraform; do
-    mkdir -p ${dir2}; pushd ${dir2} > /dev/null
-    find ${SCRIPTDIR}/template/${dir2} -mindepth 1 -maxdepth 1 -type f -exec ln -sf {} \;
-    popd > /dev/null
-  done
   popd > /dev/null
   echo "Created ${projectid}"
 done
