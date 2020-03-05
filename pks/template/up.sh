@@ -3,9 +3,9 @@
 ORGANIZATION_ID=265595624405
 CLOUDHEALTH_SERVICE_ACCOUNT_NAME=cloudhealthpivotal
 BILLING_ID=0076DC-766E1F-EBDCB8
-PROJECT_ID=$(basename $(pwd))
 
 pushd $( dirname "${BASH_SOURCE[0]}" )
+PROJECT_ID=$(basename $(pwd))
 
 if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
 
