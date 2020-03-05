@@ -22,7 +22,6 @@ if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
 
   gcloud container clusters create development-cluster \
     --zone=us-central1-c \
-    --release-channel=rapid \
     --machine-type=g1-small \
     --disk-size=30GB \
     --cluster-version 1.15.9-gke.9
