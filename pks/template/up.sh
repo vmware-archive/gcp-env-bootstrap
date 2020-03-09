@@ -17,7 +17,7 @@ if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
       cloudresourcemanager.googleapis.com \
       cloudbilling.googleapis.com \
       storage-component.googleapis.com \
-      container.googleapis.com
+      container.googleapis.com \
       --project ${PROJECT_ID}
 
   gcloud container clusters create development-cluster \
