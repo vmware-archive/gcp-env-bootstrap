@@ -1,5 +1,42 @@
 #!/bin/bash
 
+set -x
+
+# retry NUM_RETRIES CMD PARAM1 PARAM2 ...
+function retry {
+  local retries=$1
+  shift
+
+  local count=0
+  local exit=999
+  while true; do
+    set +e
+    output=$("$@")
+    exit=$?
+    #set -e
+    if [[ $exit -eq 0 ]]; then
+      echo "$output"
+      break
+    else
+      echo "failed command output:" 1>&2
+      echo "$output" 1>&2
+
+      count=$(($count + 1))
+
+      if [ $count -lt $retries ]; then
+        echo "Retry $count/$retries exited $exit, retrying in $wait seconds..." 1>&2
+        sleep 5
+      else
+        echo "Retry $count/$retries exited $exit, no more retries left. Returning error code $exit" 1>&2
+        break
+      fi
+    fi
+  done
+  echo Command "$@" succeeded with status $exit 1>&2
+  return $exit
+}
+
+
 ORGANIZATION_ID=265595624405
 CLOUDHEALTH_SERVICE_ACCOUNT_NAME=cloudhealthpivotal
 BILLING_ID=0076DC-766E1F-EBDCB8
@@ -71,20 +108,10 @@ kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community
 
 sleep 60
 
-set -x
-
-kubectl get service ingress-nginx --namespace=ingress-nginx
 my_new_ip=$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo $my_new_ip
-curl http://${my_new_ip}/hello -v
 
-result=$?
-
-if [[ $result != 0 ]]
-then
-  echo "${PROJECT_ID} could not be created. Sample app failed to deploy."
-  exit 1
-fi
+retry 3 curl http://${my_new_ip}/hello -v
 
 kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
 
