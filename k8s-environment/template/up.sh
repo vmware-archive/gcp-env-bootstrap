@@ -37,12 +37,14 @@ function retry {
 }
 
 
-ORGANIZATION_ID=265595624405
-CLOUDHEALTH_SERVICE_ACCOUNT_NAME=cloudhealthpivotal
-BILLING_ID=0076DC-766E1F-EBDCB8
+export ORGANIZATION_ID=265595624405
+export CLOUDHEALTH_SERVICE_ACCOUNT_NAME=cloudhealthpivotal
+export BILLING_ID=0076DC-766E1F-EBDCB8
 
 pushd $( dirname "${BASH_SOURCE[0]}" )
-PROJECT_ID=$(basename $(pwd))
+
+export PROJECT_ID=$(basename $(pwd))
+export KUBECONFIG=$(pwd)/.kubeconfig
 
 if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
 
@@ -90,10 +92,8 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --project ${PROJECT_ID} \
   --no-user-output-enabled
 
-# is it going to be a problem to do this concurrently?
 gcloud container clusters get-credentials development-cluster --zone us-central1-c --project ${PROJECT_ID}
 
-# need to install kubectl if not installed
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
@@ -109,9 +109,8 @@ kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community
 sleep 60
 
 my_new_ip=$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo $my_new_ip
 
-retry 3 curl http://${my_new_ip}/hello -v
+retry 6 curl http://${my_new_ip}/hello -v
 
 kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
 
