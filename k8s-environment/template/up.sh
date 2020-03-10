@@ -69,10 +69,14 @@ kubectl expose deployment hello-app
 
 kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
 
-sleep 20
+sleep 60
 
-echo http://$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')/hello -v
-curl http://$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')/hello -v
+set -x
+
+kubectl get service ingress-nginx --namespace=ingress-nginx
+my_new_ip=$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo $my_new_ip
+curl http://${my_new_ip}/hello -v
 
 result=$?
 

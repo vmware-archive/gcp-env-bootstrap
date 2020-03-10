@@ -1,13 +1,13 @@
 # GCP Environment Bootstrap
 
 We teach a number of classes that utilize GCP.
-The table below shows which environment needs provisioning or each class.
+The table below shows which environment needs provisioning for each class.
 
-| Class                                   | Environment                        |
-| --------------------------------------- | ---------------------------------- |                         
-| PAS Fundamentals                        | [BOSH](bosh-environment/README.md) |
-| PKS Fundamentals                        | [BOSH](bosh-environment/README.md) | 
-| PAL for Developers on PKS (In progress) | [PKS](pks-environment/README.md)   |
+| Class                                          | Environment                        |
+| ---------------------------------------------- | ---------------------------------- |                         
+| PAS Fundamentals                               | [BOSH](bosh-environment/README.md) |
+| PKS Fundamentals                               | [BOSH](bosh-environment/README.md) | 
+| PAL for Developers on Kubernetes (In progress) | [K8s](k8s-environment/README.md)   |
 
 ## Setup
 
