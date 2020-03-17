@@ -60,7 +60,7 @@ if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
       --project ${PROJECT_ID}
 
   gcloud container clusters create development-cluster \
-    --zone=us-central1-c \
+    --zone=us-central1-a \
     --machine-type=g1-small \
     --disk-size=30GB \
     --cluster-version 1.15.9-gke.9 \
