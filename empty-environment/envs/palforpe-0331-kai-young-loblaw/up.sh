@@ -1,0 +1,1 @@
+/Users/hgillane/ops-workspace/gcp-env-bootstrap/empty-environment/template/up.sh
