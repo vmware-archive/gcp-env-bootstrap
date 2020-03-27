@@ -92,6 +92,15 @@ Output:
 Source an env file to interact with the respective director using the
 BOSH CLI.
 
+## Downloading student env files
+
+To download all student env files for a cohort, use the `gsutil` command.
+For a `GROUP_ID` of "pks-fun-0330", you'd use:
+
+```
+gsutil cp -r gs://pal-env-files/pks-fun-0330/* ~/Desktop/envs
+```
+
 ## Testing a deployed director
 
 To test an environment we need to do the following
