@@ -92,6 +92,20 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --project ${PROJECT_ID} \
   --no-user-output-enabled
 
+gcloud iam service-accounts create project-owner \
+  --display-name=project-owner \
+  --project ${PROJECT_ID}
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member=serviceAccount:project-owner@${PROJECT_ID}.iam.gserviceaccount.com  \
+  --role=roles/owner \
+  --project ${PROJECT_ID} \
+  --no-user-output-enabled
+
+gcloud iam service-accounts keys create service-account.json \
+  --iam-account=project-owner@${PROJECT_ID}.iam.gserviceaccount.com \
+  --project ${PROJECT_ID}
+
 gcloud container clusters get-credentials development-cluster --zone us-central1-c --project ${PROJECT_ID}
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
