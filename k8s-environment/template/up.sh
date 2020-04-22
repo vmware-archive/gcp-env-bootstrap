@@ -102,7 +102,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --project ${PROJECT_ID} \
   --no-user-output-enabled
 
-gcloud iam service-accounts keys create service-account.json \
+gcloud iam service-accounts keys create service-account-keyfile.json \
   --iam-account=project-owner@${PROJECT_ID}.iam.gserviceaccount.com \
   --project ${PROJECT_ID}
 
