@@ -62,36 +62,31 @@ Output:
 
 ## Creating student environments
 
-Each environment has an up.sh script. It is used to deploy a jumpbox and
-a director.
+Each environment has an `provision.sh` script. It is used to create the
+GCP project and deploy both a jumpbox and a Bosh director to it.
+
+You'll execute the generated `provision.sh` for each directory that was
+created. 
+
+```bash
+./envs/[env-to-spin-up]/provision.sh <cohort id> <gcp folder id>
+```
 
 Inputs:
 
-- folder id variable
+- cohort id: Identifier for the cohort
+- gcp folder id: ID for the folder created on GCP
 
 Usage:
 
-From the top-level directory, to create a director in its own dedicated
-project, run the following.
-
-```bash
-FOLDER_ID=123456789 ./envs/[env-to-spin-up]/up.sh
-```
-
-After the `up.sh` script finishes, check the output for any uncaught errors.
-
-The following manual steps must be taken to complete the provisioning:
-Log into the GCP Console, locate the provisioned account, go to the `IAM and admin` page
-(navigate using the upper-left hamburger),
-and change the role of all the admins, instructors, and the student to `Owner`.
+After the `provision.sh` script finishes, check the output for any
+uncaught errors.
 
 Output:
 
 -   A _*-env_ file.
     This file contains all variables needed to connect to the BOSH
     director that was spun up.
-    This file will be saved in GCS within a folder named after the
-    GROUP_ID for instructors to access.
 
 Source an env file to interact with the respective director using the
 BOSH CLI.
