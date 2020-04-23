@@ -7,6 +7,11 @@ fi
 
 set -x
 
+function namefromemail() {
+  email=$1
+  echo ${email%@*}| sed 's/[\.+]/-/g'
+}
+
 # retry NUM_RETRIES CMD PARAM1 PARAM2 ...
 function retry {
   local retries=$1
@@ -52,7 +57,7 @@ gcloud container clusters create pal-for-devs-k8s \
     --zone=us-central1-a \
     --machine-type=g1-small \
     --disk-size=30GB \
-    --cluster-version 1.15.9-gke.9 \
+    --cluster-version 1.15.11-gke.9 \
     --no-enable-autoupgrade \
     --project ${PROJECT_ID}
 
