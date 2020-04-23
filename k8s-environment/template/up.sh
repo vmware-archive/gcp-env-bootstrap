@@ -69,8 +69,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ngin
 
 kubectl run hello-app --image=gcr.io/google-samples/hello-app:1.0 --port=8080
 
-kubectl create namespace development
-
 kubectl expose deployment hello-app
 
 kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
@@ -86,6 +84,8 @@ kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/communit
 kubectl delete svc hello-app
 
 kubectl delete deployment hello-app
+
+kubectl create namespace development
 
 student_name=$(namefromemail $(cat user.txt))
 
