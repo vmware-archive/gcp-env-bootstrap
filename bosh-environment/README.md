@@ -8,18 +8,31 @@ director installed.
 
 ## Usage
 
-There are two options available.
+Provisioning environments follows three steps:
 
--   Create _each_ director in a dedicated GCP project.
--   Create _all_ directors in one GCP project.
+1. GCP environment set up
+1. Initializing setup scripts
+1. Creating student environments
 
 The primary script to use is `init.sh`.
 
-Before using `init.sh` you _must_ ensure that each of the student emails
-map directly to a genuine GCP account.
-Failure to do this will cause the scripts to fail.
+## GCP environment set up
 
-## The `init.sh` script
+### Create a folder for the class
+
+In the GCP resource manager, within the `pivotal.io` organization,
+within the `CSO-Education` folder, find the folder for the course you
+are creating environments for:
+
+- PAS Fundamentals: `CSO-Education > pas-fundamentals`
+- PKS Fundamentals: `CSO-Education > pks-fundamentals`
+
+Within this folder, make a new folder for the class using the cohort id
+as the name.
+Take note of the folder id that is associated with this newly created
+folder, as it will be needed later.
+
+## Initializing setup scripts
 
 The `init.sh` is used to generate directories that contain templates and
 up/down scripts which know how to provision and reclaim BOSH director
@@ -32,7 +45,7 @@ Command line:
   This is an identifier for the set of GCP projects being created.
   Use the naming convention `pksfun-mmdd` or `pasfun-mmdd` for the PKS
   Fundamentals and PAS Fundamentals courses respectively.
-- A list of emails which correspond to genuine GCP accounts
+- A list of email addresses
 
 Usage:
 
@@ -47,19 +60,10 @@ Output:
     environments requested.
     In this case `pksfun-0503-fbloggs` and `pksfun-0503-gbloggs`.
 
-## Create a folder for the class
+## Creating student environments
 
-In the GCP resource manager, within the `pivotal.io` organization,
-within the `CSO-Education` folder, find the folder for the course you
-are creating environments for.
-Within this folder, make a new folder for the class using the cohort id
-as the name.
-Take note of the folder id that is associated with this newly created
-folder, as it will be needed in the following step.
-
-## The generated `up.sh` script
-
-It is used to deploy a jumpbox and a director.
+Each environment has an up.sh script. It is used to deploy a jumpbox and
+a director.
 
 Inputs:
 
