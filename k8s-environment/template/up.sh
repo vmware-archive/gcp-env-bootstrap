@@ -54,7 +54,7 @@ export KUBECONFIG=$(pwd)/.kubeconfig
 cohort_id=$1
 
 gcloud container clusters create pal-for-devs-k8s \
-    --zone=us-central1-a \
+    --zone=us-central1-c \
     --machine-type=g1-small \
     --disk-size=30GB \
     --cluster-version 1.15.11-gke.9 \
