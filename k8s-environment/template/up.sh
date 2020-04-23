@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]; then
+  echo "Usage: ./up.sh <cohort id>"
+  exit 1
+fi
+
 set -x
 
 # retry NUM_RETRIES CMD PARAM1 PARAM2 ...
@@ -36,30 +41,14 @@ function retry {
   return $exit
 }
 
-
-export ORGANIZATION_ID=265595624405
-export CLOUDHEALTH_SERVICE_ACCOUNT_NAME=cloudhealthpivotal
-export BILLING_ID=0076DC-766E1F-EBDCB8
-
 pushd $( dirname "${BASH_SOURCE[0]}" )
 
 export PROJECT_ID=$(basename $(pwd))
 export KUBECONFIG=$(pwd)/.kubeconfig
 
-if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
+cohort_id=$1
 
-  gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ID}
-
-  gcloud services enable \
-      compute.googleapis.com \
-      iam.googleapis.com \
-      cloudresourcemanager.googleapis.com \
-      cloudbilling.googleapis.com \
-      storage-component.googleapis.com \
-      container.googleapis.com \
-      --project ${PROJECT_ID}
-
-  gcloud container clusters create development-cluster \
+gcloud container clusters create pal-for-devs-k8s \
     --zone=us-central1-a \
     --machine-type=g1-small \
     --disk-size=30GB \
@@ -67,46 +56,7 @@ if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
     --no-enable-autoupgrade \
     --project ${PROJECT_ID}
 
-else
-  echo "${PROJECT_ID} could not be created. Aborting environment creation."
-  exit 1
-fi
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member user:$(cat ./user.txt) \
-  --role "roles/editor"
-
-gcloud iam service-accounts create ${CLOUDHEALTH_SERVICE_ACCOUNT_NAME} \
-  --display-name=CloudHealthPivotal \
-  --project ${PROJECT_ID}
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member=serviceAccount:${CLOUDHEALTH_SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com \
-  --role=organizations/${ORGANIZATION_ID}/roles/cloudhealthrole \
-  --project ${PROJECT_ID} \
-  --no-user-output-enabled
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member=serviceAccount:${CLOUDHEALTH_SERVICE_ACCOUNT_NAME}@cma-test.iam.gserviceaccount.com \
-  --role=roles/viewer \
-  --project ${PROJECT_ID} \
-  --no-user-output-enabled
-
-gcloud iam service-accounts create project-owner \
-  --display-name=project-owner \
-  --project ${PROJECT_ID}
-
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-  --member=serviceAccount:project-owner@${PROJECT_ID}.iam.gserviceaccount.com  \
-  --role=roles/owner \
-  --project ${PROJECT_ID} \
-  --no-user-output-enabled
-
-gcloud iam service-accounts keys create service-account-keyfile.json \
-  --iam-account=project-owner@${PROJECT_ID}.iam.gserviceaccount.com \
-  --project ${PROJECT_ID}
-
-gcloud container clusters get-credentials development-cluster --zone us-central1-c --project ${PROJECT_ID}
+gcloud container clusters get-credentials pal-for-devs-k8s --zone us-central1-c --project ${PROJECT_ID}
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
 
@@ -131,5 +81,18 @@ kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/communit
 kubectl delete svc hello-app
 
 kubectl delete deployment hello-app
+
+# upload the JSON keyfile to GCS
+gsutil cp *-keyfile.json gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
+
+# create student-env file and upload to GCS
+student_name=$(namefromemail $(cat user.txt))
+cat > ${envfile}-env <<-EOF
+Cluster URL: development.${student_name}.k8s.pal.pivotal.io
+Custer Name: pal-for-devs-k8s
+GCP Project Name: ${PROJECT_ID}
+EOF
+
+gsutil cp *-env gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
 
 echo "${PROJECT_ID} successfully provisioned."
