@@ -87,17 +87,14 @@ kubectl delete svc hello-app
 
 kubectl delete deployment hello-app
 
-# upload the JSON keyfile to GCS
-gsutil cp *-keyfile.json gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
-
-# create student-env file and upload to GCS
 student_name=$(namefromemail $(cat user.txt))
+
 cat > ${student_name}-env <<-EOF
 Cluster URL: development.${student_name}.k8s.pal.pivotal.io
 Custer Name: pal-for-devs-k8s
 GCP Project Name: ${PROJECT_ID}
 EOF
 
-gsutil cp *-env gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
+gsutil cp *-env *-keyfile.json gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
 
 echo "${PROJECT_ID} successfully provisioned."
