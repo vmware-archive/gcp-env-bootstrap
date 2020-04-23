@@ -1,7 +1,14 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]; then
+  echo "Usage: ./up.sh <gcs directory path>"
+  exit 1
+fi
+
 pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
+
+gcs_directory_path=$1
 
 bbl plan --lb-type concourse
 bbl up
@@ -27,4 +34,4 @@ export DIRECTOR_SSH=jumpbox@$(bosh int vars/director-vars-file.yml --path /inter
 $(bbl print-env | sed -e 's@=/.*@=${JUMPBOX_PRIVATE_KEY}@g')
 OEOF
 
-gsutil cp *-env gs://pal-env-files/${GROUP_ID}/
+gsutil cp *-env gs://pal-env-files/${gcs_directory_path}/

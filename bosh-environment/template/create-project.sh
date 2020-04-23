@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]; then
+  echo "Usage: create-project.sh <gcp folder id>"
+  exit 1
+fi
+
 ORGANIZATION_ID=265595624405
 CLOUDHEALTH_SERVICE_ACCOUNT_NAME=cloudhealthpivotal
 BILLING_ID=0076DC-766E1F-EBDCB8
@@ -7,11 +12,13 @@ BILLING_ID=0076DC-766E1F-EBDCB8
 pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
+gcp_folder_id=$1
+
 gcloud projects describe ${PROJECT_ID}
 
 if [ $? -ne 0 ]; then
 
-  if gcloud projects create ${PROJECT_ID} --folder=${FOLDER_ID}; then
+  if gcloud projects create ${PROJECT_ID} --folder=${gcp_folder_id}; then
       gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ID}
       gcloud services enable \
           compute.googleapis.com \

@@ -69,13 +69,16 @@ You'll execute the generated `provision.sh` for each directory that was
 created. 
 
 ```bash
-./envs/[env-to-spin-up]/provision.sh <cohort id> <gcp folder id>
+./envs/[env-to-spin-up]/provision.sh <gcp folder id> <gcs folder path>
 ```
 
 Inputs:
 
-- cohort id: Identifier for the cohort
-- gcp folder id: ID for the folder created on GCP
+- gcp folder id: ID of the folder on GCP
+- gcs folder path: location to store student credentials, stored on GCS
+
+  PKS Fundamentals: "pks-fundamentals/<cohort-id>"
+  PAS Fundamentals: "pas-fundamentals/<cohort-id>"
 
 Usage:
 
@@ -94,7 +97,6 @@ BOSH CLI.
 ## Downloading student env files
 
 To download all student env files for a cohort, use the `gsutil` command.
-For a `GROUP_ID` of "pks-fun-0330", you'd use:
 
 ```
 gsutil cp -r gs://pal-env-files/pks-fun-0330/* ~/Desktop/envs
