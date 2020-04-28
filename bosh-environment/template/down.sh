@@ -3,6 +3,6 @@
 pushd $( dirname "${BASH_SOURCE[0]}" )
 source ./common.sh
 
-bbl down --no-confirm
+bbl down --no-confirm --debug
 
 echo "Deprovisioning completed"
