@@ -5,3 +5,4 @@ source ./common.sh
 
 bbl down --no-confirm
 
+echo "Deprovisioning completed"
