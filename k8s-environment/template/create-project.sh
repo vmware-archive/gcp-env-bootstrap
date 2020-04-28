@@ -32,6 +32,7 @@ if [ $? -ne 0 ]; then
           cloudbilling.googleapis.com \
           storage-component.googleapis.com \
           container.googleapis.com \
+          dns.googleapis.com \
           --project ${PROJECT_ID}
   else
       echo "${PROJECT_ID} could not be created. Aborting environment creation."

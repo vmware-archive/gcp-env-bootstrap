@@ -12,7 +12,7 @@ fi
 
 gcp_folder_id=$1
 
-projects=($(gcloud projects list --filter "parent.id:${gcp_folder_id}" --format="json(name)" | jq '.[] | .name'))
+projects=($(gcloud projects list --filter "parent.id:${gcp_folder_id}" --format="json(name)" | jq -r '.[] | .name'))
 
 echo "The following projects will be deprovisioned:"
 
@@ -27,8 +27,8 @@ if [[ ! $REPLY =~ ^[Yy]  ]]; then
 fi
 
 for project in "${projects[@]}"; do
- 
-  dir="envs/$(echo $project | tr -d '"')"
+
+  dir="envs/${project}"
 
   pushd $dir > /dev/null
 

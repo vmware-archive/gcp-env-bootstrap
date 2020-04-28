@@ -75,9 +75,9 @@ kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community
 
 sleep 60
 
-my_new_ip=$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+ingress_router_ip=$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
-retry 6 curl http://${my_new_ip}/hello -v
+retry 6 curl http://${ingress_router_ip}/hello -v
 
 kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
 
@@ -93,6 +93,7 @@ cat > ${student_name}-env <<-EOF
 Cluster URL: development.${student_name}.k8s.pal.pivotal.io
 Cluster Name: pal-for-devs-k8s
 GCP Project Name: ${PROJECT_ID}
+Ingress Router IP: ${ingress_router_ip}
 EOF
 
 gsutil cp *-env *-keyfile.json gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
