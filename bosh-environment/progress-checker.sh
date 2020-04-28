@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 
-# bail out if no prefix given
-# find all envs files for given prefix
 # loop through them and print them out
 # loop through them, source env file, run bosh vms, check status code
 
@@ -14,14 +12,27 @@ fi
 
 group_id=${1}
 
-env_files=("$(ls envs/${group_id}*/*.sh)")
+for cohort_directory in envs/${group_id}*; do
 
-for env_file in envs/${group_id}*/*.sh; do
-    echo "File: ${env_file}"
+  echo $cohort_directory
 
-    echo "Done"
+  pushd $cohort_directory > /dev/null
+  
+  if [ ! -f *-env ]; then
+    "Env file does not exist for ${$cohort_directory}"
+  else
+    source *-env
+    timeout 2s bosh vms > /dev/null
+    exit_status=$?
+
+    if [ $exit_status -ne 0 ]; then
+      echo "Provisioning failed for ${$cohort_directory}"
+    else
+      echo "${cohort_directory} successfully provisioned"
+    fi
+  fi
+
+  popd > /dev/null
 
 done
-
-#cat envs/*/up.sh
 
