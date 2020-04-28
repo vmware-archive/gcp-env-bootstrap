@@ -135,6 +135,19 @@ Output:
 
 - A clean GCP project with all traces of the director removed.
 
+## Deprovisioning
+
+We can't delete GCP projects, so deleting VMs after a cohort ends is the
+next best thing. To run `bbl down` on all projects in a cohort, use
+`deprovision-cohort.sh`:
+
+    ```
+    ./deprovision-cohort.sh <group id> <cohrt id>
+    ```
+
+This will create a tmux session with windows running `bbl down` for each
+project in the `envs/` directory that matches that `group id` param.
+
 ## Multiple environments
 
 Use [tmux](https://en.wikipedia.org/wiki/Tmux) to bring up multiple
@@ -155,18 +168,8 @@ for project in $(ls -d ./envs/${GROUP_ID}*); do
 done
 ```
 
-To take the environments _down_.
-
-```bash
-for project in $(ls -d ./envs/${GROUP_ID}*); do
-  tmux new-window bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt";
-done
-```
-
 ## Email Michael Nemish with environment info
 
 After the projects have been provisioned, send an email to
-mnemish@pivotal.io with a list of GCP project that have been created.
-
-After spinning down the projects, also be sure to send him an email to
-let him know.
+mnemish@pivotal.io with a list of GCP project that have been created and
+when they can be deleted.
