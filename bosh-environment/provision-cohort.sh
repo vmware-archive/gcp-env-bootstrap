@@ -7,9 +7,9 @@ fi
 
 cohort_prefix=$1
 cohort_id=$2
-course_type=$3
+course=$3
 gcp_folder_id=$4
-gcs_path="${course_type}/${cohort_id}"
+gcs_path="${course}/${cohort_id}"
 
 projects=$(ls -d envs/${cohort_prefix}-*)
 

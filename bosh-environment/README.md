@@ -1,175 +1,130 @@
 # Purpose
 
-These are the environment bootstrap scripts for spinning student environments
-for PAS Fundamentals and PKS Fundamentals. 
+We use GCP for our courses that require a BOSH environment. This project
+helps you do two things:
 
-Following these instructions will create GCP projects with a jumpbox and BOSH
-director installed.
+1. Provision student environments on GCP
+1. Deprovision student environments on GCP
 
-## Usage
+## Provisioning
 
-Provisioning environments follows three steps:
+Following these instructions will create student environments on GCP for
+each student in a cohort. After provisioning, each student will have:
 
-1. GCP environment set up
-1. Initializing setup scripts
-1. Creating student environments
+- A new GCP project
+- A BOSH director and jumpbox in that GCP project
+- An env file that allows the student to connect to their environment 
+    (stored on a GCS bucket)
 
-The primary script to use is `init.sh`.
+Provisioning follows these steps:
 
-## GCP environment set up
+1. Create a folder on GCP for the cohort
+1. Create student environment setup directories with `init.sh`
+1. Provision the cohort with `provision-cohort.sh`
+1. Email Michael Nemesh and let him know we created projects
 
-### Create a folder for the class
+### Provision the cohort
 
-In the GCP resource manager, within the `pivotal.io` organization,
-within the `CSO-Education` folder, find the folder for the course you
-are creating environments for:
+1. In the GCP resource manager, within the `pivotal.io` organization,
+   within the `CSO-Education` folder, find the folder for the course you
+   are creating environments for:
 
-- PAS Fundamentals: `CSO-Education > pas-fundamentals`
-- PKS Fundamentals: `CSO-Education > pks-fundamentals`
+   - PAS Fundamentals: `CSO-Education > pas-fundamentals`
+   - PKS Fundamentals: `CSO-Education > pks-fundamentals`
 
-Within this folder, make a new folder for the class using the cohort id
-as the name.
-Take note of the folder id that is associated with this newly created
-folder, as it will be needed later.
+   Within this folder, make a new folder for the class using the cohort
+   id as the name. Take note of the folder id that is associated with
+   this newly created folder, as it will be needed later.
 
-## Initializing setup scripts
+1. First generate folders in the `envs` directory for each student given. 
 
-The `init.sh` is used to generate directories that contain templates and
-up/down scripts which know how to provision and reclaim BOSH director
-VMs.
+    ```bash
+    export GROUP_ID=pks-fun-02-22
+    ./init.sh <student-1-email> <student-2-email> ...
+    ```
+    
+    The `GROUP_ID` variable should be `pks-fun-mm-dd` or `pas-fun-mm-dd`,
+    depending on the course.
+    
+    This step has no side effects besides creating the folders.
 
-Inputs:
+1. Create student environments on GCP
 
-Command line:
-- A `GROUP_ID` variable (optional, randomized when omitted) 
-  This is an identifier for the set of GCP projects being created.
-  Use the naming convention `pksfun-mmdd` or `pasfun-mmdd` for the PKS
-  Fundamentals and PAS Fundamentals courses respectively.
-- A list of email addresses
+    ```bash
+    ./provision-cohort.sh <cohort prefix> <cohort id> <course> <gcp folder id>
+    ```
 
-Usage:
+    Arguments:
+    - cohort prefix: This should be the same as the `GROUP_ID` above
+    - cohort id: Identifier for the cohort from Caddy
+    - course: Course you are provisioning. Use the following values:
+        - PAS Fundamentals: `pas-fundamentals`
+        - PKS Fundamentals: `pks-fundamentals`
+    - gcp folder id: **ID** of the GCP folder created earlier - *not the folder name*
 
-```bash
-export GROUP_ID=pksfun-0503
-./init.sh fbloggs@abc.com gbloggs@xyz.com
-```
+    This will deploy a BOSH director and jumpbox using `bbl` as well as
+    generate the student env file for each student using these steps:
+    
+    1. Create a new `tmux` session with the name `provision-<cohort id>`
+    1. Create a new window for each student and run `provision.sh`
 
-Output:
+    TODO: Note about [checking progress using the progress checker](https://www.pivotaltracker.com/story/show/172583482)
 
--   A directory called `envs` that contains the directories for the
-    environments requested.
-    In this case `pksfun-0503-fbloggs` and `pksfun-0503-gbloggs`.
+1. Email Michael Nemesh
 
-## Creating student environments
+    After the projects have been provisioned, send an email to
+    mnemesh@pivotal.io with a list of GCP project that have been created and
+    when they can be deleted.
 
-Each environment has an `provision.sh` script. It is used to create the
-GCP project and deploy both a jumpbox and a Bosh director to it.
+## Deprovisioning
 
-You'll execute the generated `provision.sh` for each directory that was
-created. 
+Following these steps will tear down student environments but leave the
+project behind. 
 
-```bash
-./envs/[env-to-spin-up]/provision.sh <gcp folder id> <gcs folder path>
-```
+TODO: Before `bbl down` need to [destroy all bosh deployments for each director](https://www.pivotaltracker.com/story/show/172570041).
 
-Inputs:
+These steps assume you've provisioned student environments using this
+repo and the generated folders for each student are still present on the
+file system.
 
-- gcp folder id: ID of the folder on GCP
-- gcs folder path: location to store student credentials, stored on GCS
+### Deprovision the cohort
 
-  PKS Fundamentals: "pks-fundamentals/<cohort-id>"
-  PAS Fundamentals: "pas-fundamentals/<cohort-id>"
+1. Run the `deprovision-cohort.sh` script to tear down all bbl
+    deployments. This does not delete the GCP projects.
 
-Usage:
+    ```bash
+    ./deprovision-cohort.sh <cohort prefix> <cohort id> 
+    ```
 
-After the `provision.sh` script finishes, check the output for any
-uncaught errors.
+    Arguments:
+    - cohort prefix: the same as the GROUP_ID used to provision this cohort
+    - cohort id: Identifier for the cohort from Caddy
 
-Output:
+    This will essentially run `bbl down` for each BOSH deployment using
+    these steps:
+    
+    1. Create a new `tmux` session with the name `deprovision-<cohort id>`
+    1. Create a new window for each student in this session and create
+        the student's GCP project and run `down.sh`
 
--   A _*-env_ file.
-    This file contains all variables needed to connect to the BOSH
-    director that was spun up.
-
-Source an env file to interact with the respective director using the
-BOSH CLI.
+    TODO: add ability to [check progress of deprovisioning for a cohort](https://www.pivotaltracker.com/story/show/172587433)
 
 ## Downloading student env files
 
-To download all student env files for a cohort, use the `gsutil` command.
+To download all student env files for a cohort, use something like this:
 
 ```
-gsutil cp -r gs://pal-env-files/pks-fun-0330/* ~/Desktop/envs
+mkdir "$tmp_folder"
+gsutil -m cp "gs://pal-env-files/${course}/${cohort_id}/*" "$tmp_folder" > /dev/null
+zip "${tmp_folder}.zip" ${tmp_folder}/* > /dev/null
+rm -r "$tmp_folder"
 ```
 
 ## Testing a deployed director
 
-To test an environment we need to do the following
-
-- [Install](https://bosh.io/docs/cli-v2-install/) the BOSH cli.
-- Source the environment variables of the target environment.
-- Invoke a BOSH cli method which depends upon the BOSH director.
-
-For example, the following will produce a meaningful response from the
-director.
+To test an environment we need to do the following:
 
 ```bash
 source ./envs/[env-to-spin-up]/[env-to-spin-up]-env
 bosh env
 ```
-
-## The generated `down.sh` script
-
-This will remove the director and jumpbox, clean up the VMs, disks and
-networks and remove all users the up script had created.
-
-Usage:
-
-From the `envs` directory run the following.
-
-```bash
-./[env-to-take-down]/down.sh
-```
-
-Output:
-
-- A clean GCP project with all traces of the director removed.
-
-## Deprovisioning
-
-We can't delete GCP projects, so deleting VMs after a cohort ends is the
-next best thing. To run `bbl down` on all projects in a cohort, use
-`deprovision-cohort.sh`:
-
-    ```
-    ./deprovision-cohort.sh <group id> <cohrt id>
-    ```
-
-This will create a tmux session with windows running `bbl down` for each
-project in the `envs/` directory that matches that `group id` param.
-
-## Multiple environments
-
-Use [tmux](https://en.wikipedia.org/wiki/Tmux) to bring up multiple
-environments at once.
-It is also helpful to persist logs using the tee command.
-in the process so that you can troubleshoot later on if things go wrong.
-
-To force multiple environments to appear inside a single project, you
-must first `export` the `PROJECT_ID` variable.
-It is a similar story for the `BILLING_ID` if new projects are to be
-created.
-
-Then you can use the following.
-
-```bash
-for project in $(ls -d ./envs/${GROUP_ID}*); do
-  tmux new-window bash -lic "${project}/up.sh 2>&1 | tee ${project}/up-log.txt";
-done
-```
-
-## Email Michael Nemish with environment info
-
-After the projects have been provisioned, send an email to
-mnemish@pivotal.io with a list of GCP project that have been created and
-when they can be deleted.
