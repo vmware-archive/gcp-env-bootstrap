@@ -3,5 +3,5 @@
 source *-env
 
 for deployment in $(bosh deployments --json | jq '.Tables[].Rows[].name'); do
-    bosh delete-deployment -d ${deployment}
+    bosh delete-deployment -d ${deployment} --non-interactive
 done
