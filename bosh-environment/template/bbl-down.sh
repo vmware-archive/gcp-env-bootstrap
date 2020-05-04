@@ -5,4 +5,3 @@ source ./common.sh
 
 bbl down --no-confirm --debug
 
-echo "Deprovisioning completed"

@@ -25,5 +25,5 @@ fi
 tmux new-session -d -s "deprovision-${cohort_id}"
 
 for project in ${projects[*]}; do
-  tmux new-window -t "deprovision-${cohort_id}" bash -lic "${project}/down.sh 2>&1 | tee ${project}/down-log.txt";
+  tmux new-window -t "deprovision-${cohort_id}" bash -lic "${project}/deprovision.sh 2>&1 | tee ${project}/down-log.txt";
 done
