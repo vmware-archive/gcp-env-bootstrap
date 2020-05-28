@@ -18,27 +18,24 @@ gcloud projects describe ${PROJECT_ID}
 
 if [ $? -ne 0 ]; then
 
-  if gcloud projects create ${PROJECT_ID} --folder=${gcp_folder_id} --labels="business_unit=mapbu,cost_center=us1083017,short_cost_center=83107"; then
-    set -e
-
-    gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ID}
-    gcloud services enable \
-      compute.googleapis.com \
-      iam.googleapis.com \
-      cloudresourcemanager.googleapis.com \
-      cloudbilling.googleapis.com \
-      storage-component.googleapis.com \
-      --project ${PROJECT_ID}
-
-    set +e
-  else
-      echo "${PROJECT_ID} could not be created. Aborting environment creation."
-      exit 1
-  fi
+  set -e
+  gcloud projects create ${PROJECT_ID} --folder=${gcp_folder_id} --labels="business_unit=mapbu,cost_center=us1083017,short_cost_center=83107"
+  set +e
 
 else
   echo "project ${PROJECT_ID} already exists, proceeding.."
 fi
+
+set -e
+gcloud beta billing projects link ${PROJECT_ID} --billing-account=${BILLING_ID}
+gcloud services enable \
+  compute.googleapis.com \
+  iam.googleapis.com \
+  cloudresourcemanager.googleapis.com \
+  cloudbilling.googleapis.com \
+  storage-component.googleapis.com \
+  --project ${PROJECT_ID}
+set +e
 
 gcloud iam service-accounts describe ${SERVICE_ACCOUNT}
 
