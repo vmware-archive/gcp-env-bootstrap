@@ -42,10 +42,10 @@ Provisioning follows these steps:
     export GROUP_ID=pks-fun-02-22
     ./init.sh <student-1-email> <student-2-email> ...
     ```
-    
+
     The `GROUP_ID` variable should be `pks-fun-mm-dd` or `pas-fun-mm-dd`,
     depending on the course.
-    
+
     This step has no side effects besides creating the folders.
 
 1. Create student environments on GCP
@@ -64,7 +64,7 @@ Provisioning follows these steps:
 
     This will deploy a BOSH director and jumpbox using `bbl` as well as
     generate the student env file for each student using these steps:
-    
+
     1. Create a new `tmux` session with the name `provision-<cohort id>`
     1. Create a new window for each student and run `provision.sh`
 
@@ -79,7 +79,7 @@ Provisioning follows these steps:
 ## Deprovisioning
 
 Following these steps will tear down student environments but leave the
-project behind. 
+project behind.
 
 TODO: Before `bbl down` need to [destroy all bosh deployments for each director](https://www.pivotaltracker.com/story/show/172570041).
 
@@ -102,7 +102,7 @@ file system.
 
     This will essentially run `bbl down` for each BOSH deployment using
     these steps:
-    
+ 
     1. Create a new `tmux` session with the name `deprovision-<cohort id>`
     1. Create a new window for each student in this session and create
         the student's GCP project and run `down.sh`
@@ -113,7 +113,7 @@ file system.
 
 To download all student env files for a cohort, use something like this:
 
-```
+```bash
 mkdir "$tmp_folder"
 gsutil -m cp "gs://pal-env-files/${course}/${cohort_id}/*" "$tmp_folder" > /dev/null
 zip "${tmp_folder}.zip" ${tmp_folder}/* > /dev/null
