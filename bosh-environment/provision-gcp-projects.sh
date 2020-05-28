@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ $# -ne 3 ]; then
-    echo "Usage: ./provision-cohort.sh <cohort prefix> <cohort id> <gcp folder id>"
+    echo "Usage: ./provision-gcp-projects.sh <cohort prefix> <cohort id> <gcp folder id>"
     exit 1
 fi
 

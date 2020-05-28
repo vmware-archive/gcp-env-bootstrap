@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ $# -ne 3 ]; then
-    echo "Usage: ./provision-cohort.sh <cohort prefix> <cohort id> <course>"
+    echo "Usage: ./provision-bosh-directors.sh <cohort prefix> <cohort id> <course>"
     exit 1
 fi
 
