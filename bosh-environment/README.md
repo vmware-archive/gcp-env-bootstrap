@@ -76,6 +76,72 @@ Provisioning follows these steps:
     mnemesh@pivotal.io with a list of GCP project that have been created and
     when they can be deleted.
 
+## Alternative Provisioning Strategy
+
+This alternative method of provisioning the environments
+decouples the creation of the gcp projects from the provisioning of bosh directors.
+
+Here's what I recommend you do, from start to finish:
+
+1. Set your environment variables:
+
+    ```bash
+    export GCP_FOLDER_ID="..."
+    export GROUP_ID="..."
+    export COHORT_ID="..."
+    ```
+
+1. Run the init script as described previously
+
+    ```bash
+    ./init.sh user.name@example.com user.two@example.com next.user@example.com etc@example.com
+    ```
+
+1. Create the gcp projects:
+
+    ```bash
+    ./provision-gcp-projects.sh $GROUP_ID $COHORT_ID $GCP_FOLDER_ID
+    ```
+
+    The projects are created in parallel using separate tmux windows in a single tmux session.
+    You can monitor the progress for an environment by tailing the _provision log file_ located
+    in each environment directory:
+
+    ```bash
+    tail -f provision-log.txt
+    ```
+
+1. Verify the gcp projects have been created, and that the log file shows no errors.
+   If you encountered an error, it is safe to re-run the script.
+
+1. Once the gcp projects have been created, proceed to create the bosh directors:
+
+    ```bash
+    ./provision-bosh-directors.sh $GROUP_ID $COHORT_ID pas-fundamentals|pks-fundamentals
+    ```
+
+    Above, the third argument is either `pas-fundamentals` or `pks-fundamentals`.
+
+    Again, you can tail the bosh provisioning log file to monitor progress:
+
+    ```bash
+    tail -f provision-bosh-log.txt
+    ```
+
+1. The environment files are deposited to gcs, in the gcp project `pal-bosh-internal`,
+  in the bucket `pal-env-files`, in a subdirectory named after the class's cohort id.
+  We recommend you download and test each environment before handing them off to the
+  instructor:
+
+    ```bash
+    source <env-file-name>
+    bosh deployments
+    ```
+
+Finally, don't forget to communicate to Michael Nemesh the creation of these projects.
+If all projects are for a single cohort, all you need to relate is the folder name and id
+(in the CSO-Education hierarchy) that contains all the gcp projects.
+
 ## Deprovisioning
 
 Following these steps will tear down student environments but leave the
