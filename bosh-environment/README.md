@@ -180,10 +180,9 @@ file system.
 To download all student env files for a cohort, use something like this:
 
 ```bash
-mkdir "$tmp_folder"
-gsutil -m cp "gs://pal-env-files/${course}/${cohort_id}/*" "$tmp_folder" > /dev/null
-zip "${tmp_folder}.zip" ${tmp_folder}/* > /dev/null
-rm -r "$tmp_folder"
+gsutil -m cp -R "gs://pal-env-files/${course}/${cohort_id}" .
+zip "${cohort_id}.zip" "${cohort_id}/*"
+rm -r "${cohort_id}"
 ```
 
 ## Testing a deployed director
