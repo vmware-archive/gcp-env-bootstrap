@@ -49,13 +49,12 @@ else
   echo "service account ${BBL_ENV_NAME} already exists, proceeding.."
 fi
 
-if [ ! -f "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
-
+# -s means "file exists and size is > 0"
+if [ -s "${BBL_GCP_SERVICE_ACCOUNT_KEY}" ]; then
+  echo "service account key already exists, proceeding.."
+else
   gcloud iam service-accounts keys create ${BBL_GCP_SERVICE_ACCOUNT_KEY} \
     --iam-account ${SERVICE_ACCOUNT}
-
-else
-  echo "service account key already exists, proceeding.."
 fi
 
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
