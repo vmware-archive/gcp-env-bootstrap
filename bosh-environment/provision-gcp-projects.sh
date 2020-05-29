@@ -23,8 +23,10 @@ if [[ ! $REPLY =~ ^[Yy]  ]]; then
   exit 2
 fi
 
-tmux new-session -d -s "provision-${cohort_id}"
+tmux new-session -s "provision-${cohort_id}" -n first-window -d
 
 for project in ${projects[*]}; do
   tmux new-window -t "provision-${cohort_id}" bash -lic "${project}/create-project.sh ${gcp_folder_id} 2>&1 | tee ${project}/provision-log.txt";
 done
+
+tmux kill-window -t first-window
