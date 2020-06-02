@@ -1,10 +1,10 @@
 #!/bin/bash
 
 function email2projectid() {
-    echo "${GROUP_ID}-$(echo $1 | sed s/@.*$// | tr '[:upper:]._' '[:lower:]--' | tr -d ' ')" | cut -c -30 | sed 's/-*$//g'
+    echo "${COHORT_PREFIX}-$(echo $1 | sed s/@.*$// | tr '[:upper:]._' '[:lower:]--' | tr -d ' ')" | cut -c -30 | sed 's/-*$//g'
 }
 
-GROUP_ID=${GROUP_ID:-${RANDOM}}
+COHORT_PREFIX=${COHORT_PREFIX:-${RANDOM}}
 
 SCRIPTDIR=$(cd $(dirname "$0") && pwd -P)
 
@@ -22,11 +22,6 @@ read -p "Are you sure (y/n) ? " -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
   exit 2
-fi
-
-if ! [ -x "$(command -v bbl)" ]; then
-  echo "Installing dependencies"
-  ${SCRIPTDIR}/install_deps.sh
 fi
 
 for user in "$@"

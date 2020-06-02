@@ -3,7 +3,7 @@
 set -e
 
 if [ $# -ne 1 ]; then
-  echo "Usage: ./up.sh <gcs directory path>"
+  echo "Usage: ./bbl-up.sh <gcs directory path>"
   exit 1
 fi
 
