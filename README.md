@@ -10,12 +10,13 @@ At the moment, we provision GCP projects for these classes:
 - PAS Fundamentals (for Operators)
 - PKS Fundamentals (for Operators)
 - PAL for Developers on K8S
+- PAL for Platform Engineers on GCP
 
-All three classes require a GCP project per student.
+All classes require a GCP project per student.
 
 The two operator classes also require provisioning a BOSH director per student.
 
-The developer class does not require a BOSH director at all.  It's not about BOSH, it's about K8S.  In addition to the GCP project, for the developer class, we provision a GKE cluster per student.
+For the developer class instead of a BOSH director, we provision a GKE cluster per student.
 
 ## Setup
 
@@ -55,7 +56,7 @@ e.g. For a PAS Fundamentals class starting on March 3, the prefix is: pasfun-030
 Inputs:
 
 - the cohort prefix, as an environment variable
-- the cohort's roster, as a list of email addresses
+- the cohort's roster, represented by a list of email addresses, provided as command line arguments
 
 Example:
 
@@ -86,7 +87,7 @@ Each student subdirectory contains symlinks to scripts located in `template/`.
     ```bash
     export COHORT_PREFIX="..." # the cohort prefix you used with init.sh earlier
     export COHORT_ID="..."
-    export GCP_FOLDER_ID="..."  # the gcp folder idea from the previous step
+    export GCP_FOLDER_ID="..."  # the gcp folder id from the previous step
     ```
 
 1. Run the script `provision-gcp-projects` as follows:
@@ -143,8 +144,28 @@ Again, you can tail the bosh provisioning log file to monitor progress:
 tail -f provision-bosh-log.txt
 ```
 
+The provisioning of bosh directors can take some time.
+Be patient.
+Thanks to tmux, you are free to log out of the jumpbox altogether and come back later.
+
+You can verify whether the process is still running by checking to see if the tmux session is still alive:
+
+```bash
+tmux ls
+```
+
+The output is a set of environment files, one per student, used to configure their bosh cli.
+
 The environment files are deposited to gcs, in the gcp project `pal-bosh-internal`,
 in the bucket `pal-env-files`, in a subdirectory named after the class's cohort id.
+
+### Downloading student env files
+
+To download all student env files for a cohort, use something like this:
+
+```bash
+gsutil -m cp -R "gs://pal-env-files/${course}/${cohort_id}" .
+```
 
 We recommend that you download and test each environment before handing them off to the
 instructor:
@@ -156,16 +177,6 @@ bosh env
 
 It's a nice touch to email the environment files to the principal instructor
 of the upcoming delivery.
-
-The provisioning of bosh directors can take some time.
-Be patient.
-Thanks to tmux, you are free to log out of the jumpbox altogether and come back later.
-
-You can verify whether the process is still running by checking to see if the tmux session is still alive:
-
-```bash
-tmux ls
-```
 
 ## Provisioning GKE clusters for a cohort
 
@@ -181,26 +192,26 @@ You can tail the gke clusters provisioning log file to monitor progress:
 tail -f provision-gke-log.txt
 ```
 
-1. For each student, set up DNS
+For each student, set up DNS
 
-    1. Get IP address for ingress router
+1. Get IP address for ingress router
 
-        ```bash
-        kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-        ```
+    ```bash
+    kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+    ```
 
-    1. Create DNS Zone in GCP
-        1. Zone name: pal-for-devs-k8s
-        1. DNS name: ${student}.k8s.pal.pivotal.io
-    1. Copy value of NS Record and go to Route 53
-    1. Go into Hosted Zone for k8s course (k8s.pal.pivotal.io)
-    1. Create Record Set for the student
-        1. Name: ${student-name} (from the generated student env file)
-        1. Type: NS Record
-        1. TTL: 60
-        1. Value: NS records from GCP
-    1. Go back to GCP DNS zone
-    1. Add a record set to GCP DNS Zone
-        1. DNS Name: *
-        1. Type: A record
-        1. Value: IP address of ingress router
+1. Create DNS Zone in GCP
+    1. Zone name: pal-for-devs-k8s
+    1. DNS name: ${student}.k8s.pal.pivotal.io
+1. Copy value of NS Record and go to Route 53
+1. Go into Hosted Zone for k8s course (k8s.pal.pivotal.io)
+1. Create Record Set for the student
+    1. Name: ${student-name} (from the generated student env file)
+    1. Type: NS Record
+    1. TTL: 60
+    1. Value: NS records from GCP
+1. Go back to GCP DNS zone
+1. Add a record set to GCP DNS Zone
+    1. DNS Name: *
+    1. Type: A record
+    1. Value: IP address of ingress router
