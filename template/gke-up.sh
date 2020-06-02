@@ -57,7 +57,7 @@ gcloud container clusters create pal-for-devs-k8s \
     --zone=us-central1-c \
     --machine-type=g1-small \
     --disk-size=30GB \
-    --cluster-version 1.15.11-gke.9 \
+    --cluster-version 1.16.8-gke.15 \
     --no-enable-autoupgrade \
     --project ${PROJECT_ID}
 
