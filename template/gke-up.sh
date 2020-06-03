@@ -96,6 +96,6 @@ GCP Project Name: ${PROJECT_ID}
 Ingress Router IP: ${ingress_router_ip}
 EOF
 
-gsutil cp *-env *-keyfile.json gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
+gsutil cp *-env *-service-account-key.json gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
 
 echo "${PROJECT_ID} successfully provisioned."
