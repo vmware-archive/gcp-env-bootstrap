@@ -87,7 +87,8 @@ student_name=$(namefromemail $(cat user.txt))
 # 1. create dns managed zone
 gcloud dns managed-zones create ${student_name}-zone \
   --description="student subdomain" \
-  --dns-name=${student_name}.k8s.pal.pivotal.io.
+  --dns-name=${student_name}.k8s.pal.pivotal.io. \
+  --project $PROJECT_ID
 
 # 2. create dns entry for ingress routing
 gcloud dns record-sets transaction start \
