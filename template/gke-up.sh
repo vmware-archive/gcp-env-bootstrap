@@ -68,7 +68,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ngin
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
 
 kubectl run hello-app --image=gcr.io/google-samples/hello-app:1.0 --port=8080
-
 kubectl expose deployment hello-app
 
 kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
@@ -82,12 +81,31 @@ retry 6 curl http://${ingress_router_ip}/hello -v
 kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
 
 kubectl delete svc hello-app
-
 kubectl delete deployment hello-app
 
 kubectl create namespace development
 
 student_name=$(namefromemail $(cat user.txt))
+
+# 1. create dns managed zone
+gcloud dns managed-zones create ${student_name}-zone \
+  --description="student subdomain" \
+  --dns-name=${student_name}.k8s.pal.pivotal.io.
+
+# 2. create dns entry for ingress routing
+gcloud dns record-sets transaction start \
+  --project $PROJECT_ID \
+  --zone=${student_name}-zone
+
+gcloud dns record-sets transaction \
+  add ${ingress_router_ip} \
+  --name="*.${student_name}.k8s.pal.pivotal.io." \
+  --project $PROJECT_ID \
+  --ttl=300 --type=A --zone=${student_name}-zone
+
+gcloud dns record-sets transaction execute \
+  --project $PROJECT_ID \
+  --zone=${student_name}-zone
 
 cat > ${student_name}-env <<-EOF
 Cluster URL: development.${student_name}.k8s.pal.pivotal.io
