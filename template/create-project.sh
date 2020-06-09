@@ -24,7 +24,7 @@ if [ $? -ne 0 ]; then
 
   set -e
   gcloud projects create ${PROJECT_ID} --folder=${gcp_folder_id} \
-    --labels="business_unit=mapbu,cost_center=us1083017,short_cost_center=83107"
+    --labels="business_unit=mapbu,cost_center=us1983017,short_cost_center=83107"
   set +e
 
 else
