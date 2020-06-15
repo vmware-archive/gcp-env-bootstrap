@@ -191,8 +191,13 @@ You can tail the gke clusters provisioning log file to monitor progress:
 tail -f provision-gke-log.txt
 ```
 
-For each student, set up DNS
+### Create NS Entry in Route 53
 
-1. Make note of the Name Servers for the student's DNS Zone in their GCP project
-1. In AWS's Route 53, navigate to the hosted zone for the domain k8s.pal.pivotal.io
-1. Create an NS Record mapping the student name to the list of ns servers
+The following script will create NS entries in aws route 53
+for each student:
+
+```bash
+./make-all-aws-ns-records.sh $COHORT_PREFIX
+```
+
+** The aws cli must be installed and configured (~/.aws/credentials with access key id and secret)
