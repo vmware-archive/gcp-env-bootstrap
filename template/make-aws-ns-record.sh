@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pushd $( dirname "${BASH_SOURCE[0]}" )
+
 project_id=$(basename $(pwd))
 username=$(sed 's/@.*$//g' user.txt | tr '[:upper:]._' '[:lower:]--' )
 

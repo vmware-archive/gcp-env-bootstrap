@@ -24,7 +24,7 @@ fi
 tmux new-session -s "provision-${cohort_prefix}" -n first-window -d
 
 for project in ${projects[*]}; do
-  tmux new-window -t "provision-${cohort_prefix}" bash -lic "${project}/make-aws-ns-record.sh 2>&1 | tee ${project}/provision-gke-log.txt";
+  tmux new-window -t "provision-${cohort_prefix}" bash -lic "${project}/make-aws-ns-record.sh 2>&1 | tee ${project}/make-aws-dns-log.txt";
 done
 
 tmux kill-window -t first-window
