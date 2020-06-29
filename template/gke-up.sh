@@ -66,19 +66,9 @@ gcloud container clusters get-credentials pal-for-devs-k8s --zone us-central1-c 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
 
-kubectl run hello-app --image=gcr.io/google-samples/hello-app:1.0 --port=8080
-kubectl expose deployment hello-app
-kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
-
-sleep 60
+sleep 60 # wait for the gcp lb to be created and available before..
 
 ingress_router_ip=$(kubectl get service ingress-nginx --namespace=ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-
-retry 6 curl http://${ingress_router_ip}/hello -v
-
-kubectl delete -f https://raw.githubusercontent.com/GoogleCloudPlatform/community/master/tutorials/nginx-ingress-gke/ingress-resource.yaml
-kubectl delete svc hello-app
-kubectl delete deployment hello-app
 
 kubectl create namespace development
 
