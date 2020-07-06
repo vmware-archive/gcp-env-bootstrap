@@ -1,7 +1,5 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]; then
-  echo "Usage: ./gke-up.sh <cohort id>"
   exit 1
 fi
 
@@ -73,11 +71,26 @@ ingress_router_ip=$(kubectl get service ingress-nginx --namespace=ingress-nginx 
 kubectl create namespace development
 
 student_name=$(namefromemail $(cat user.txt))
+domain_name="k8s.pal.pivotal.io"
+
+concourse_password=$(pwgen -s 15 1)
+
+# deploy concourse
+helm repo add concourse https://concourse-charts.storage.googleapis.com/ && helm repo update
+kubectl create namespace concourse
+helm install concourse \
+    --set web.ingress.enabled=true \
+    --set web.ingress.hosts="{concourse.${student_name}.${domain_name}}" \
+    --set concourse.web.externalUrl="https://concourse.${student_name}.${domain_name}" \
+    --set concourse.web.auth.mainTeam.localUser="user" \
+    --set secrets.localUsers="user:${concourse_password}" \
+    concourse/concourse \
+    --namespace concourse
 
 # 1. create dns managed zone
 gcloud dns managed-zones create ${student_name}-zone \
   --description="student subdomain" \
-  --dns-name=${student_name}.k8s.pal.pivotal.io. \
+  --dns-name=${student_name}.${domain_name}. \
   --project $PROJECT_ID
 
 # 2. create dns entry for ingress routing
@@ -87,7 +100,7 @@ gcloud dns record-sets transaction start \
 
 gcloud dns record-sets transaction \
   add ${ingress_router_ip} \
-  --name="*.${student_name}.k8s.pal.pivotal.io." \
+  --name="*.${student_name}.${domain_name}." \
   --project $PROJECT_ID \
   --ttl=300 --type=A --zone=${student_name}-zone
 
@@ -96,10 +109,14 @@ gcloud dns record-sets transaction execute \
   --zone=${student_name}-zone
 
 cat > ${student_name}-env <<-EOF
-Cluster URL: development.${student_name}.k8s.pal.pivotal.io
+Cluster URL: development.${student_name}.${domain_name}
 Cluster Name: pal-for-devs-k8s
 GCP Project Name: ${PROJECT_ID}
 Ingress Router IP: ${ingress_router_ip}
+Concourse:
+  url: concourse.${student_name}.${domain_name}
+  username: user
+  password: ${concourse_password}
 EOF
 
 gsutil cp *-env *-service-account-key.json gs://pal-env-files/pal-for-devs-kubernetes/${cohort_id}/
