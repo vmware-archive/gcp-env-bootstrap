@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]; then
+  echo "Usage: ./gke-up.sh <cohort id>"
   exit 1
 fi
 
