@@ -12,40 +12,6 @@ function namefromemail() {
   echo ${email%@*}| sed 's/[\.+]/-/g'
 }
 
-# retry NUM_RETRIES CMD PARAM1 PARAM2 ...
-function retry {
-  local retries=$1
-  shift
-
-  local count=0
-  local exit=999
-  while true; do
-    set +e
-    output=$("$@")
-    exit=$?
-    #set -e
-    if [[ $exit -eq 0 ]]; then
-      echo "$output"
-      break
-    else
-      echo "failed command output:" 1>&2
-      echo "$output" 1>&2
-
-      count=$(($count + 1))
-
-      if [ $count -lt $retries ]; then
-        echo "Retry $count/$retries exited $exit, retrying in $wait seconds..." 1>&2
-        sleep 5
-      else
-        echo "Retry $count/$retries exited $exit, no more retries left. Returning error code $exit" 1>&2
-        break
-      fi
-    fi
-  done
-  echo Command "$@" succeeded with status $exit 1>&2
-  return $exit
-}
-
 pushd $( dirname "${BASH_SOURCE[0]}" )
 
 export PROJECT_ID=$(basename $(pwd))
