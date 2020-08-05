@@ -74,12 +74,12 @@ Each student subdirectory contains symlinks to scripts located in `template/`.
    within the `CSO-Education` folder, find the folder for the course you
    are creating environments for:
 
-   - PAS Fundamentals: `CSO-Education > pas-fundamentals`
-   - PKS Fundamentals: `CSO-Education > pks-fundamentals`
+   - `pas-fundamentals`
+   - `pks-fundamentals`
+   - `pal-for-developers-kubernetes`
+   - `pal-for-pes`
 
-   Within this folder, make a new folder for the class using the cohort
-   id as the name. Take note of the folder id that is associated with
-   this newly created folder.
+   Note the "folder id" corresponding to the class you wish to provision.
 
 1. Create three environment variables:
 

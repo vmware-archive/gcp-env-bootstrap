@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 if [ $# -ne 3 ]; then
-    echo "Usage: ./provision-gcp-projects.sh <cohort prefix> <cohort id> <gcp folder id>"
+    echo "Usage: ./provision-gcp-projects.sh <cohort prefix> <cohort id> <gcp parent folder id>"
     exit 1
 fi
 
 cohort_prefix=$1
 cohort_id=$2
-gcp_folder_id=$3
+gcp_parent_folder_id=$3
 
 projects=$(ls -d envs/${cohort_prefix}-*)
 
@@ -22,6 +22,11 @@ read -p "Are you sure (y/n) ? " -r
 if [[ ! $REPLY =~ ^[Yy]  ]]; then
   exit 2
 fi
+
+gcp_folder_id=$(gcloud resource-manager folders create \
+  --folder="${gcp_parent_folder_id}" \
+  --display-name="cohort-${cohort_id}" \
+  --format json | jq -r .name |  cut -d / -f 2)
 
 tmux new-session -s "provision-${cohort_id}" -n first-window -d
 
