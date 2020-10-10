@@ -23,10 +23,26 @@ if [[ ! $REPLY =~ ^[Yy]  ]]; then
   exit 2
 fi
 
-gcp_folder_id=$(gcloud resource-manager folders create \
+result=$(gcloud resource-manager folders list \
   --folder="${gcp_parent_folder_id}" \
-  --display-name="cohort-${cohort_id}" \
-  --format json | jq -r .name |  cut -d / -f 2)
+  --filter="display_name=cohort-${cohort_id}" \
+  --format=json)
+
+size=$(echo $result | jq 'length')
+
+if [[ $size -eq 0 ]]
+then
+  gcp_folder_id=$(gcloud resource-manager folders create \
+    --folder="${gcp_parent_folder_id}" \
+    --display-name="cohort-${cohort_id}" \
+    --format json | jq -r .name |  cut -d / -f 2)
+else
+  gcp_folder_id=$(gcloud resource-manager folders list \
+    --folder="${gcp_parent_folder_id}" \
+    --filter="display_name=cohort-${cohort_id}" \
+    --format json | jq -r '.[0].name' | cut -d / -f 2
+  )
+fi
 
 tmux new-session -s "provision-${cohort_id}" -n first-window -d
 
