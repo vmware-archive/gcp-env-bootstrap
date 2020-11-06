@@ -3,3 +3,4 @@
 bosh-environment/envs/
 k8s-environment/envs/
 *.swp
+envs
